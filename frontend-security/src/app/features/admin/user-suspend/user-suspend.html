@@ -1,10 +1,10 @@
 <div class="container mt-5">
   <div class="card shadow-lg border-0 rounded-4">
-<div class="card-header bg-primary text-white text-center py-3 rounded-top-4">
-  <h4 class="mb-0">
-    <i class="fa-solid fa-ban me-2"></i> Usuarios Bloqueados
-  </h4>
-</div>
+    <div class="card-header bg-primary text-white text-center py-3 rounded-top-4">
+      <h4 class="mb-0">
+        <i class="fa-solid fa-ban me-2"></i> Usuarios Bloqueados
+      </h4>
+    </div>
 
 
     <div class="card-body bg-light rounded-bottom-4">
@@ -25,12 +25,8 @@
       <!-- Selector de cantidad -->
       <div class="d-flex justify-content-end mb-3 align-items-center">
         <label for="itemsPerPage" class="me-2 fw-semibold text-secondary">Mostrar:</label>
-        <select
-          id="itemsPerPage"
-          class="form-select form-select-sm w-auto border-primary text-primary fw-semibold"
-          [(ngModel)]="itemsPerPage"
-          (change)="onItemsPerPageChange()"
-        >
+        <select id="itemsPerPage" class="form-select form-select-sm w-auto border-primary text-primary fw-semibold"
+          [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange()">
           <option [value]="5">5</option>
           <option [value]="10">10</option>
           <option [value]="20">20</option>
@@ -85,28 +81,8 @@
         </table>
       </div>
 
-      <!-- Navegación simple -->
-      <div class="d-flex justify-content-center align-items-center mt-4">
-        <button
-          class="btn btn-outline-primary btn-sm me-3"
-          (click)="previousPage()"
-          [disabled]="currentPage === 1"
-        >
-          <i class="fa-solid fa-angle-left me-1"></i> Anterior
-        </button>
-
-        <span class="fw-semibold text-secondary">
-          Página {{ currentPage }} de {{ totalPages }}
-        </span>
-
-        <button
-          class="btn btn-outline-primary btn-sm ms-3"
-          (click)="nextPage()"
-          [disabled]="currentPage === totalPages"
-        >
-          Siguiente <i class="fa-solid fa-angle-right ms-1"></i>
-        </button>
-      </div>
+      <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChanged)="onPageChanged($event)">
+      </app-pagination>
       }
     </div>
   </div>

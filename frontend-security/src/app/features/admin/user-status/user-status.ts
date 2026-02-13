@@ -28,8 +28,7 @@ export class UserStatus {
   loadUsers(): void {
     this.statusService.getAllStatus().subscribe({
       next: (data) => (this.status = data),
-      error: (err) => {
-        console.error('Error cargando usuarios:', err);
+      error: () => {
         this.status = [];
       },
     });

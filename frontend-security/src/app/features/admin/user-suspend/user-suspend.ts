@@ -5,15 +5,16 @@ import { UserService } from '../../../core/services/user.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from '../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
+import { PaginationComponent } from "../../../shared/pagination/pagination";
 
 @Component({
   selector: 'app-user-suspend',
-  imports: [FormsModule, MatDialogModule],
+  imports: [FormsModule, MatDialogModule, PaginationComponent],
   templateUrl: './user-suspend.html',
   styleUrl: './user-suspend.css'
 })
 export class UserSuspend {
-  users: any[] | null = null;
+   users: any[] = [];
   currentPage = 1;
   itemsPerPage = 10; 
   constructor(private userService: UserService, private dialog: MatDialog, private authService: AuthService) { }
@@ -58,15 +59,13 @@ export class UserSuspend {
     });
   }
 
-
   get totalPages(): number {
-    return this.users ? Math.ceil(this.users.length / this.itemsPerPage) : 0;
+    return this.users.length ? Math.ceil(this.users.length / this.itemsPerPage) : 1;
   }
 
   paginatedUsers(): any[] {
-    if (!this.users) return [];
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.users.slice(startIndex, startIndex + this.itemsPerPage);
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.users.slice(start, start + this.itemsPerPage);
   }
 
   onItemsPerPageChange(): void {
@@ -74,12 +73,7 @@ export class UserSuspend {
     this.currentPage = 1;
   }
 
-
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) this.currentPage++;
-  }
-
-  previousPage(): void {
-    if (this.currentPage > 1) this.currentPage--;
+  onPageChanged(newPage: number) {
+    this.currentPage = newPage;
   }
 }

@@ -5,33 +5,30 @@ import { ModalEliminacion } from '../../../shared/modal-eliminacion/modal-elimin
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Respuesta } from '../../../models/respuesta';
 import { AuthService } from '../../../core/services/auth.service';
+import { PaginationComponent } from "../../../shared/pagination/pagination";
 
 @Component({
   selector: 'app-user-active',
-  imports: [FormsModule, MatDialogModule],
+  imports: [FormsModule, MatDialogModule, PaginationComponent],
   templateUrl: './user-active.html',
   styleUrl: './user-active.css'
 })
 export class UserActive {
 
-
-
-
-  users: any[] | null = null;
+  users: any[] = [];
   currentPage = 1;
-  itemsPerPage = 10; // valor por defecto
+  itemsPerPage = 10;
 
   constructor(private userService: UserService, private dialog: MatDialog, private authService: AuthService) { }
 
   ngOnInit(): void {
-    // Leer valor guardado en localStorage
     const savedItems = localStorage.getItem('itemsPerPage');
     if (savedItems) {
       this.itemsPerPage = parseInt(savedItems, 10);
     }
-
     this.loadUsers();
   }
+
   descativar(row: any) {
     console.log(row)
     const dialogEliminar = this.dialog.open(ModalEliminacion, {
@@ -73,6 +70,7 @@ export class UserActive {
       });
     })
   }
+
   bloquear(row: any) {
     console.log(row)
     const dialogEliminar = this.dialog.open(ModalEliminacion, {
@@ -97,36 +95,27 @@ export class UserActive {
   loadUsers(): void {
     this.userService.getUsersActive().subscribe({
       next: (data) => (this.users = data),
-      error: (err) => {
-        console.error('Error cargando usuarios:', err);
+      error: () => {
         this.users = [];
       },
     });
   }
 
   get totalPages(): number {
-    return this.users ? Math.ceil(this.users.length / this.itemsPerPage) : 0;
+    return this.users.length ? Math.ceil(this.users.length / this.itemsPerPage) : 1;
   }
-
 
   paginatedUsers(): any[] {
-    if (!this.users) return [];
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.users.slice(startIndex, startIndex + this.itemsPerPage);
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.users.slice(start, start + this.itemsPerPage);
   }
-
 
   onItemsPerPageChange(): void {
     localStorage.setItem('itemsPerPage', this.itemsPerPage.toString());
     this.currentPage = 1;
   }
 
-
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) this.currentPage++;
-  }
-
-  previousPage(): void {
-    if (this.currentPage > 1) this.currentPage--;
+  onPageChanged(newPage: number) {
+    this.currentPage = newPage;
   }
 }
