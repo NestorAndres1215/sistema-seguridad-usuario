@@ -1,10 +1,8 @@
 <div class="container mt-5">
-  <div class="card shadow-lg border-0 rounded-4">
-    <div class="card-header bg-primary text-white text-center py-3 rounded-top-4">
-      <h4 class="mb-0"> <i class="fa-solid fa-check-circle me-2"></i> Usuarios Activos</h4>
-    </div>
+  <div class="card  border-0 rounded-4">
 
-    <div class="card-body bg-light rounded-bottom-4">
+
+    <div class=" rounded-bottom-4">
       <!-- Spinner de carga -->
       @if (!users) {
       <div class="text-center my-5">
@@ -19,19 +17,7 @@
       </div>
 
       } @else {
-      <!-- Selector de cantidad -->
-      <div class="d-flex justify-content-end mb-3 align-items-center">
-        <label for="itemsPerPage" class="me-2 fw-semibold text-secondary">Mostrar:</label>
-        <select id="itemsPerPage" class="form-select form-select-sm w-auto border-primary text-primary fw-semibold"
-          [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange()">
-          <option [value]="5">5</option>
-          <option [value]="10">10</option>
-          <option [value]="20">20</option>
-          <option [value]="30">30</option>
-          <option [value]="50">50</option>
-        </select>
-        <span class="ms-2 text-secondary">usuarios por página</span>
-      </div>
+
 
       <div class="table-responsive">
         <table class="table table-hover align-middle text-center table-bordered border-light rounded-3">
