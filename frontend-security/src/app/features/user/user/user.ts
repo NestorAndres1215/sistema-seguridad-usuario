@@ -22,7 +22,6 @@ export class User implements OnInit {
   listUser() {
     this.authService.getCurrentUser().subscribe({
       next: (user) => {
-
         this.user = user;
         this.isLoggedIn = true;
       },

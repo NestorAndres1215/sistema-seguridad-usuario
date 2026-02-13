@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AlertService } from '../../../core/services/alert.service';
 import { Login_IS } from '../../../models/loginIS';
 import { ROLES } from '../../../core/constants/role.contants';
+import { MENSAJES } from '../../../core/constants/messages';
 
 
 @Component({
@@ -54,22 +55,17 @@ export class Login {
                 this.router.navigate(['/dashboard']);
               }
             },
-            error: (error) => {
-              console.error('Error obteniendo usuario actual:', error);
-            }
           });
         },
         error: () => {
-          this.alertService.error('Error', 'Credenciales incorrectas o servidor no disponible.');
+           this.alertService.error('Error', MENSAJES.LOGIN_ERROR)
         }
 
       });
 
     } else {
-      this.alertService.warning(
-        'Campos incompletos',
-        'Por favor, completa todos los campos requeridos.'
-      );
+   
+        this.alertService.warning(MENSAJES.WARNING, MENSAJES.FILL_FIELDS);
       this.formulario.markAllAsTouched();
     }
   }
