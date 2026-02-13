@@ -2,13 +2,8 @@
 
   <div *ngIf="!user && !isLoggedIn" class="empty">
     <p><i class="fa-solid fa-exclamation-triangle"></i> No hay usuario cargado.</p>
-    <button (click)="listUser()" class="btn">
-      <i class="fa-solid fa-user-plus"></i> Cargar usuario
-    </button>
   </div>
-
   <div *ngIf="user" class="user-card">
-
     <div class="photo-wrapper">
       <img *ngIf="user.photoUrl; else noPhoto" [src]="user.photoUrl" alt="Foto de usuario" class="user-photo" />
       <ng-template #noPhoto>
@@ -17,8 +12,6 @@
         </div>
       </ng-template>
     </div>
-
-    <!-- Datos -->
     <div class="user-info">
       <p><i class="fa-solid fa-id-card"></i> <strong>Nombre:</strong> {{ user.name || user.fullName || '—' }}</p>
       <p><i class="fa-solid fa-user"></i> <strong>Usuario:</strong> {{ user.username || user.login || '—' }}</p>
