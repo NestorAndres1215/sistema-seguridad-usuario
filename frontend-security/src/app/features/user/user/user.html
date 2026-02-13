@@ -9,9 +9,8 @@
     </button>
   </div>
 
-  <!-- Tarjeta de usuario -->
   <div *ngIf="user" class="user-card">
-    <!-- Foto -->
+
     <div class="photo-wrapper">
       <img *ngIf="user.photoUrl; else noPhoto" [src]="user.photoUrl" alt="Foto de usuario" class="user-photo" />
       <ng-template #noPhoto>

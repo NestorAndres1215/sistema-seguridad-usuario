@@ -42,9 +42,7 @@ export class Login {
           this.authService.getCurrentUser().subscribe({
             next: (user) => {
 
-
               const rol = user.role.name
-
 
               if (rol == ROLES.ROLE_ADMIN) {
                 localStorage.setItem('username', user.username)

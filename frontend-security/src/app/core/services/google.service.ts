@@ -8,6 +8,7 @@ import { LoginAuth } from '../../models/loginAuth';
   providedIn: 'root'
 })
 export class GoogleService {
+  
   public loginStatusSubjec = new Subject<boolean>();
 
   private backendUrl = environment.backendUrl;
@@ -42,10 +43,11 @@ export class GoogleService {
     });
   }
 
-  // Método para generar el token
+
   generateToken(loginData: any) {
     return this.http.post(`${this.backendUrl}/generate-token`, loginData);
   }
+
   getCurrentUser() {
     const token = localStorage.getItem('jwt');
     if (!token) {
@@ -56,22 +58,15 @@ export class GoogleService {
   }
 
 
-  // =========================
-  // Obtener token
-  // =========================
   get token(): string | null {
     return localStorage.getItem('jwt');
   }
 
-  // =========================
-  // Guardar token
-  // =========================
+ 
   setToken(token: string) {
     localStorage.setItem('jwt', token);
   }
-  // =========================
-  // Logout: elimina token local y llama al backend
-  // =========================
+
   logout(): Observable<any> {
     const token = localStorage.getItem('jwt');
     localStorage.removeItem('jwt');
@@ -83,7 +78,7 @@ export class GoogleService {
       'Authorization': `Bearer ${token}`
     });
 
-    // 👇 Cambia responseType a 'text' para evitar el error
+    
     return this.http.post(`${this.backendUrl}/auth/logout`, {}, { headers, responseType: 'text' as 'json' }).pipe(
       tap(response => {
         localStorage.removeItem('username')
