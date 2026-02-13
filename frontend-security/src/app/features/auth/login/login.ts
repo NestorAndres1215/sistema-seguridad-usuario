@@ -27,7 +27,7 @@ export class Login {
   login() {
     this.googleService.login();
   }
-  
+
   operar() {
     if (this.formulario.valid) {
       const login: Login_IS = {
@@ -38,43 +38,33 @@ export class Login {
       this.authService.generateToken(login).subscribe({
         next: (data: any) => {
 
-          // Guardar token
           this.authService.setToken(data.token);
-
-          // Obtener usuario actual
           this.authService.getCurrentUser().subscribe({
             next: (user) => {
 
-              console.log('Usuario actual:', user.role.name);
+
               const rol = user.role.name
-              console.log(ROLES.ROLE_USER); // "ROLE_USER"
+
 
               if (rol == ROLES.ROLE_ADMIN) {
                 localStorage.setItem('username', user.username)
-                console.log("INGRESO A ADMINISTRADOR" + user)
+
                 this.router.navigate(['/dashboard-admin']);
               } else {
-                console.log("INGRESO USER")
+
                 localStorage.setItem('username', user.username)
                 this.router.navigate(['/dashboard']);
               }
             },
             error: (error) => {
               console.error('Error obteniendo usuario actual:', error);
-            },
-            complete: () => {
-              console.log('Solicitud de usuario completada');
             }
           });
         },
-        error: (error) => {
-
-          console.error('Error generando token:', error);
+        error: () => {
           this.alertService.error('Error', 'Credenciales incorrectas o servidor no disponible.');
-        },
-        complete: () => {
-          console.log('Proceso de autenticación completado');
         }
+
       });
 
     } else {
@@ -98,6 +88,7 @@ export class Login {
       password: ['', Validators.required]
     });
   }
+
   register() {
     this.router.navigate(['/register'])
   }

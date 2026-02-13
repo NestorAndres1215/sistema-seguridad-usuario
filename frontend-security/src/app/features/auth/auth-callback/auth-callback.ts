@@ -42,13 +42,13 @@ export class AuthCallback {
             localStorage.setItem('username', user.email)
             this.router.navigate(['/dashboard']);
           },
-          error: (err) => {
+          error: () => {
 
             this.router.navigate(['/login']);
           },
         });
       },
-      error: (err) => {
+      error: () => {
         this.alertService.error('Error', 'No se pudo completar la autenticación con Google');
         this.router.navigate(['/login']);
       },
