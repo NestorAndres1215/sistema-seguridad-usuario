@@ -42,9 +42,5 @@ public class SessionService {
         return sessionRepository.findAll();
     }
 
-    public void deleteSession(Long id) throws Exception {
-        Session session = sessionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Session not found"));
-        sessionRepository.delete(session);
-    }
+
 }
