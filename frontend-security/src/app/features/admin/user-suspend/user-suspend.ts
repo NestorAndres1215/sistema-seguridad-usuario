@@ -15,9 +15,9 @@ import { Tabla } from "../../../shared/tabla/tabla";
   styleUrl: './user-suspend.css'
 })
 export class UserSuspend {
-   users: any[] = [];
+  users: any[] = [];
   currentPage = 1;
-  itemsPerPage = 10; 
+  itemsPerPage = 10;
   constructor(private userService: UserService, private dialog: MatDialog, private authService: AuthService) { }
 
   ngOnInit(): void {
@@ -29,7 +29,7 @@ export class UserSuspend {
 
     this.loadUsers();
   }
-    columnas = [
+  columnas = [
     { clave: 'id', etiqueta: 'Codigo' },
     { clave: 'email', etiqueta: 'Correo' },
     { clave: 'name', etiqueta: 'Nombre' },

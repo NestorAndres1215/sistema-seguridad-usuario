@@ -14,11 +14,13 @@ export class UserStatus {
   status: any[] = [];
   currentPage = 1;
   itemsPerPage = 10; 
+  
   columnas = [
     { clave: 'id', etiqueta: 'Id' },
     { clave: 'code', etiqueta: 'Nombre' },
 
   ];
+
   constructor(private statusService: StatusService) { }
 
   ngOnInit(): void {
@@ -30,6 +32,7 @@ export class UserStatus {
 
     this.loadUsers();
   }
+
   loadUsers(): void {
     this.statusService.getAllStatus().subscribe({
       next: (data) => (this.status = data),

@@ -11,19 +11,9 @@
         margin-bottom: 30px;
     }
 
-    .card {
-        background: #fff;
-        border-radius: 10px;
-        padding: 20px;
-        text-align: center;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+   
 
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    }
+
 
     .card i {
         color: #2a5298;
@@ -42,40 +32,7 @@
         color: #ff6f61;
     }
 
-    /* Main Content Section */
-    .content {
-        background: #fff;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        margin: 0 20px 30px;
-    }
 
-    .content h2 {
-        font-size: 24px;
-        color: #2a5298;
-        margin-bottom: 15px;
-    }
-
-    .content p {
-        font-size: 16px;
-        color: #555;
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-        width: 7px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: #ff6f61;
-        border-radius: 5px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 5px;
-    }
 
     /* Responsive Design */
     @media screen and (max-width: 768px) {
@@ -102,13 +59,7 @@
             font-size: 20px;
         }
 
-        .content {
-            margin: 0 15px 20px;
-        }
 
-        .content h2 {
-            font-size: 20px;
-        }
     }
 
     @media screen and (max-width: 576px) {
@@ -124,9 +75,5 @@
 
         .card {
             padding: 15px;
-        }
-
-        .content {
-            margin: 0 10px 15px;
         }
     }

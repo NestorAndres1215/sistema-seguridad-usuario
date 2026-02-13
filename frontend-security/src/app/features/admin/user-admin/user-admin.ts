@@ -17,8 +17,5 @@ import { Titulo } from "../../../shared/titulo/titulo";
 export class UserAdmin {
   constructor() { }
 
-  ngOnInit(): void {
-    
-  }
   activeTab: number = 0;
 }

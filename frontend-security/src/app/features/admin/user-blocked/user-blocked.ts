@@ -20,7 +20,7 @@ export class UserBlocked {
   currentPage = 1;
   itemsPerPage = 10;
 
-    columnas = [
+  columnas = [
     { clave: 'id', etiqueta: 'Codigo' },
     { clave: 'email', etiqueta: 'Correo' },
     { clave: 'name', etiqueta: 'Nombre' },
@@ -32,7 +32,7 @@ export class UserBlocked {
     suspender: true,
     desactivar: true
   };
-  
+
   constructor(private userService: UserService, private dialog: MatDialog, private authService: AuthService) { }
 
   ngOnInit(): void {
