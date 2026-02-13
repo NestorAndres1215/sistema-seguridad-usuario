@@ -61,18 +61,3 @@
 }
 
 
-
-@media (max-width: 480px) {
-    .login-container {
-        padding: 1.5rem;
-    }
-
-    .login-container h2 {
-        font-size: 1.5rem;
-    }
-
-    .links {
-        flex-direction: column;
-        align-items: center;
-    }
-}
