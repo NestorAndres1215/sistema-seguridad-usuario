@@ -1,7 +1,5 @@
 <section class="user-section">
-  <h2>👤 Perfil del usuario</h2>
 
-  <!-- Estado de carga -->
   <div *ngIf="!user && !isLoggedIn" class="empty">
     <p><i class="fa-solid fa-exclamation-triangle"></i> No hay usuario cargado.</p>
     <button (click)="listUser()" class="btn">
@@ -23,7 +21,7 @@
     <!-- Datos -->
     <div class="user-info">
       <p><i class="fa-solid fa-id-card"></i> <strong>Nombre:</strong> {{ user.name || user.fullName || '—' }}</p>
-      <p><i class="fa-solid fa-user"></i> <strong>Usuario:</strong> {{ user.username || user.login  || '—' }}</p>
+      <p><i class="fa-solid fa-user"></i> <strong>Usuario:</strong> {{ user.username || user.login || '—' }}</p>
       <p><i class="fa-solid fa-envelope"></i> <strong>Email:</strong> {{ user.email || '—' }}</p>
       <p><i class="fa-solid fa-user-shield"></i> <strong>Rol:</strong> {{ user.role?.name || 'Sin rol' }}</p>
       <p><i class="fa-solid fa-circle-check"></i> <strong>Estado:</strong> {{ user.status?.code }}</p>
