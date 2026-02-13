@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StatusService } from '../../../core/services/status.service';
 import { PaginationComponent } from "../../../shared/pagination/pagination";
+import { Tabla } from "../../../shared/tabla/tabla";
 
 @Component({
   selector: 'app-user-status',
-  imports: [FormsModule, PaginationComponent],
+  imports: [FormsModule, PaginationComponent, Tabla],
   templateUrl: './user-status.html',
   styleUrl: './user-status.css'
 })
@@ -13,7 +14,11 @@ export class UserStatus {
   status: any[] = [];
   currentPage = 1;
   itemsPerPage = 10; 
+  columnas = [
+    { clave: 'id', etiqueta: 'Id' },
+    { clave: 'code', etiqueta: 'Nombre' },
 
+  ];
   constructor(private statusService: StatusService) { }
 
   ngOnInit(): void {

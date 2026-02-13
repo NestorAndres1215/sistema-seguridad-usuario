@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { RoleService } from '../../../core/services/role.service';
 import { FormsModule } from '@angular/forms';
 import { PaginationComponent } from "../../../shared/pagination/pagination";
+import { Tabla } from "../../../shared/tabla/tabla";
 
 @Component({
   selector: 'app-user-roles',
-  imports: [FormsModule, PaginationComponent],
+  imports: [FormsModule, PaginationComponent, Tabla],
   templateUrl: './user-roles.html',
   styleUrl: './user-roles.css'
 })
@@ -13,7 +14,11 @@ export class UserRoles {
    role: any[] = [];
   currentPage = 1;
   itemsPerPage = 10;
+  columnas = [
+    { clave: 'id', etiqueta: 'Id' },
+    { clave: 'name', etiqueta: 'Nombre' },
 
+  ];
   constructor(private roleService: RoleService) {}
 
   ngOnInit(): void {
