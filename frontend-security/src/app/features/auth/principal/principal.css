@@ -45,27 +45,10 @@
     color: white;
 }
 
-
-main {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-    text-align: center;
-}
-
 main h2 {
     color: #007BFF;
     font-size: 2rem;
     margin-bottom: 1rem;
-}
-
-main p {
-    color: #333;
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .cards {
@@ -97,11 +80,6 @@ main p {
     margin-bottom: 1rem;
 }
 
-.card p {
-    color: #555;
-}
-
-/* Values Section */
 .values {
     margin: 3rem auto;
     max-width: 1200px;
@@ -133,8 +111,6 @@ main p {
     transition: transform 0.3s;
 }
 
-
-
 .value-item i {
     font-size: 2.5rem;
     color: #007BFF;
@@ -146,11 +122,8 @@ main p {
     margin-bottom: 1rem;
 }
 
-.value-item p {
-    color: #555;
-}
 
-/* Footer */
+
 footer {
     background-color: #007BFF;
     color: white;
@@ -167,7 +140,6 @@ footer {
     padding: 0 1rem;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .banner-container {
         flex-direction: column;
