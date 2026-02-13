@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StatusService } from '../../../core/services/status.service';
+import { PaginationComponent } from "../../../shared/pagination/pagination";
 
 @Component({
   selector: 'app-user-status',
-  imports: [FormsModule],
+  imports: [FormsModule, PaginationComponent],
   templateUrl: './user-status.html',
   styleUrl: './user-status.css'
 })
 export class UserStatus {
-  status: any[] | null = null;
+  status: any[] = [];
   currentPage = 1;
   itemsPerPage = 10; 
 
@@ -35,27 +36,20 @@ export class UserStatus {
   }
 
   get totalPages(): number {
-    return this.status ? Math.ceil(this.status.length / this.itemsPerPage) : 0;
+    return this.status.length ? Math.ceil(this.status.length / this.itemsPerPage) : 1;
   }
 
   paginatedUsers(): any[] {
-    if (!this.status) return [];
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.status.slice(startIndex, startIndex + this.itemsPerPage);
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.status.slice(start, start + this.itemsPerPage);
   }
-
 
   onItemsPerPageChange(): void {
     localStorage.setItem('itemsPerPage', this.itemsPerPage.toString());
     this.currentPage = 1;
   }
 
-
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) this.currentPage++;
-  }
-
-  previousPage(): void {
-    if (this.currentPage > 1) this.currentPage--;
+  onPageChanged(newPage: number) {
+    this.currentPage = newPage;
   }
 }

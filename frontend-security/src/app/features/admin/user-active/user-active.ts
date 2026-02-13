@@ -104,25 +104,24 @@ export class UserActive {
     });
   }
 
-  // Total de páginas
   get totalPages(): number {
     return this.users ? Math.ceil(this.users.length / this.itemsPerPage) : 0;
   }
 
-  // Usuarios paginados
+
   paginatedUsers(): any[] {
     if (!this.users) return [];
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     return this.users.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
-  // Cambiar cantidad por página
+
   onItemsPerPageChange(): void {
     localStorage.setItem('itemsPerPage', this.itemsPerPage.toString());
     this.currentPage = 1;
   }
 
-  // Navegación
+
   nextPage(): void {
     if (this.currentPage < this.totalPages) this.currentPage++;
   }
