@@ -1,29 +1,25 @@
 <div class="user-maintenance-container">
-
-  <app-titulo titulo="MANTENIMIENTO DE USUARIO"></app-titulo>
+  <app-titulo [titulo]="'MANTENIMIENTO DE USUARIO'"></app-titulo>
   <mat-tab-group [(selectedIndex)]="activeTab">
     <mat-tab label="Usuario Activo">
-      @if (activeTab === 0) {
-      <app-user-active></app-user-active>
-      }
+      <ng-container *ngIf="activeTab === 0">
+        <app-user-active></app-user-active>
+      </ng-container>
     </mat-tab>
-
     <mat-tab label="Usuario Inactivo">
-      @if (activeTab === 1) {
-      <app-user-inactive></app-user-inactive>
-      }
+      <ng-container *ngIf="activeTab === 1">
+        <app-user-inactive></app-user-inactive>
+      </ng-container>
     </mat-tab>
-
     <mat-tab label="Usuario Suspendido">
-      @if (activeTab === 2) {
-      <app-user-suspend></app-user-suspend>
-      }
+      <ng-container *ngIf="activeTab === 2">
+        <app-user-suspend></app-user-suspend>
+      </ng-container>
     </mat-tab>
-
     <mat-tab label="Usuario Bloqueado">
-      @if (activeTab === 3) {
-      <app-user-blocked></app-user-blocked>
-      }
+      <ng-container *ngIf="activeTab === 3">
+        <app-user-blocked></app-user-blocked>
+      </ng-container>
     </mat-tab>
   </mat-tab-group>
 </div>

@@ -1,16 +1,17 @@
 <div class="user-maintenance-container">
-    <app-titulo titulo="Configuracion"></app-titulo>
+  <app-titulo [titulo]="'Configuracion'"></app-titulo>
 
-    <mat-tab-group [(selectedIndex)]="activeTab">
-        <mat-tab label="Roles">
-            @if(activeTab===0){
-                <app-user-roles></app-user-roles>
-            }
-        </mat-tab>
-        <mat-tab label="Estado">
-            @if(activeTab===1){
-                <app-user-status></app-user-status>
-            }
-        </mat-tab>
-    </mat-tab-group>
+  <mat-tab-group [(selectedIndex)]="activeTab">
+    <mat-tab label="Roles">
+      <ng-container *ngIf="activeTab === 0">
+        <app-user-roles></app-user-roles>
+      </ng-container>
+    </mat-tab>
+
+    <mat-tab label="Estado">
+      <ng-container *ngIf="activeTab === 1">
+        <app-user-status></app-user-status>
+      </ng-container>
+    </mat-tab>
+  </mat-tab-group>
 </div>
