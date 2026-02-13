@@ -29,17 +29,14 @@ public class SessionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Session> getSessionById(@PathVariable Long id) {
-        Optional<Session> sessionOpt = sessionService.getSessionById(id);
-        return sessionOpt
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Optional<Session>> getSessionById(@PathVariable Long id) {
+        return ResponseEntity.ok(sessionService.getSessionById(id));
     }
 
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Session>> getSessionsByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(sessionService.getSessionsByUser(userId));
+    @GetMapping("/user/{username}")
+    public ResponseEntity<List<Session>> getSessionsByUser(@PathVariable String username) {
+        return ResponseEntity.ok(sessionService.getSessionsByUser(username));
     }
 }
 

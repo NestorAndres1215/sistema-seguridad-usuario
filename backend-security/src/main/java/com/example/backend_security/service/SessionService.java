@@ -31,8 +31,8 @@ public class SessionService {
         return sessionRepository.findById(id);
     }
 
-    public List<Session> getSessionsByUser(Long userId)  {
-        User user = userRepository.findById(userId)
+    public List<Session> getSessionsByUser(String usuario)  {
+        User user = userRepository.findByUsername(usuario)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         return sessionRepository.findByUser(user);
