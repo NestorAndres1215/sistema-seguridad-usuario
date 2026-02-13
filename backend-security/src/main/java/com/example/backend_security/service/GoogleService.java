@@ -32,8 +32,6 @@ public class GoogleService {
         this.redirectUri = redirectUri;
     }
 
-
-    // 1️⃣ Intercambiar code por token
     public GoogleResponse exchangeCodeForToken(String code) {
         String tokenUrl = "https://oauth2.googleapis.com/token";
         System.out.println("CODE = " + code);
@@ -65,7 +63,6 @@ public class GoogleService {
         return response.getBody();
     }
 
-    // 2️⃣ Obtener info del usuario usando access_token
     public Map<String, Object> getUserInfo(String accessToken) {
         String userInfoUrl = "https://openidconnect.googleapis.com/v1/userinfo";
 

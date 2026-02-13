@@ -79,17 +79,13 @@ public class UserService {
         return userRepository.save(newUser);
     }
 
-    // =========================
-    // Crear un google
-    // =========================
+
     public User registerOrUpdateOAuthUser(Map<String, Object> userInfo) throws Exception {
         String email = (String) userInfo.get("email");
         String name = (String) userInfo.get("name");
         String photoUrl = (String) userInfo.get("picture");
 
-        // Buscar si el usuario ya existe
         return userRepository.findByEmail(email).map(user -> {
-            // Actualiza los campos si el usuario ya existe
             user.setName(name);
             user.setPhotoUrl(photoUrl);
             return userRepository.save(user);
@@ -102,13 +98,10 @@ public class UserService {
                 newUser.setProvider("google");
                 newUser.setCreationDate(LocalDateTime.now());
 
-
-                // Asignar Role por defecto
                 Role defaultRole = roleRepository.findByName(RolesConstants.USER)
                         .orElseThrow(() -> new ResourceNotFoundException("Default role not found"));
                 newUser.setRole(defaultRole);
 
-                // Asignar Status por defecto
                 UserStatus defaultStatus = statusRepository.findByCode(StatusConstants.ACTIVE)
                         .orElseThrow(() -> new ResourceNotFoundException("Default status not found"));
                 newUser.setStatus(defaultStatus);
@@ -148,7 +141,6 @@ public class UserService {
             throw new ResourceAlreadyExistsException("Email already exists");
         }
 
-        // Actualizar campos
         user.setName(updatedUser.getName());
         user.setUsername(updatedUser.getUsername());
         user.setEmail(updatedUser.getEmail());
@@ -160,35 +152,23 @@ public class UserService {
     }
 
 
-
     public TokenResponse login(LoginRequest loginRequest) {
         String identificador = loginRequest.getLogin();
         String password = loginRequest.getPassword();
 
-        try {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(identificador, password)
+        );
 
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(identificador, password)
-            );
-
-
-            User user = userRepository.findByUsername(identificador)
-                    .orElseGet(() -> userRepository.findByEmail(identificador)
-                            .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado: " + identificador)));
+        User user = userRepository.findByUsername(identificador)
+                .orElseGet(() -> userRepository.findByEmail(identificador)
+                        .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado: " + identificador)));
 
 
-            String token = jwtUtils.generateToken(user);
-            tokenService.createToken(user.getId(), token);
+        String token = jwtUtils.generateToken(user);
+        tokenService.createToken(user.getId(), token);
 
-            return new TokenResponse(token);
-
-        } catch (BadCredentialsException ex) {
-            // Usuario o contraseña incorrecta → 401
-            throw new JwtAuthenticationException(AuthConstants.USER_PASS_INCORRECTO);
-        } catch (Exception ex) {
-            // Error genérico en login → 400 o 500 según contexto
-            throw new BadRequestException(AuthConstants.ERROR_LOGIN);
-        }
+        return new TokenResponse(token);
     }
 
     public User actualUsuario(Principal principal) {
@@ -201,7 +181,6 @@ public class UserService {
                         .orElseThrow(() -> new UsernameNotFoundException(AuthConstants.USUARIO_NO_VALIDO + principal.getName())));
         return user;
     }
-
 
 
     public List<User> getActiveUsers() {
@@ -223,7 +202,6 @@ public class UserService {
     public List<User> getUsersByRoleUser() {
         return userRepository.findByRole_Name(RolesConstants.USER);
     }
-
 
     public List<User> getUsersByRoleAdmin() {
         return userRepository.findByRole_Name(RolesConstants.ADMIN);
@@ -270,7 +248,6 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("Estado INACTIVE no encontrado"));
 
         user.setStatus(inactiveStatus);
-
         return userRepository.save(user);
     }
 
@@ -282,7 +259,6 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("Estado ACTIVE no encontrado"));
 
         user.setStatus(inactiveStatus);
-
         return userRepository.save(user);
     }
 
@@ -294,7 +270,6 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("Estado BLOCKED no encontrado"));
 
         user.setStatus(inactiveStatus);
-
         return userRepository.save(user);
     }
 
@@ -307,9 +282,9 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("Estado SUSPEND no encontrado"));
 
         user.setStatus(inactiveStatus);
-
         return userRepository.save(user);
     }
+
     public List<UserStatusPercentageDTO> getStatusPercentages() {
         return userRepository.getUserStatusPercentages();
     }

@@ -4,6 +4,7 @@ import com.example.backend_security.entity.Permission;
 import com.example.backend_security.exception.ResourceAlreadyExistsException;
 import com.example.backend_security.exception.ResourceNotFoundException;
 import com.example.backend_security.repository.PermissionRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PermissionService {
 
     private final PermissionRepository permissionRepository;
-
-    @Autowired
-    public PermissionService(PermissionRepository permissionRepository) {
-        this.permissionRepository = permissionRepository;
-    }
 
     public Permission createPermission(Permission permission)  {
         if (permissionRepository.findByCode(permission.getCode()).isPresent()) {
@@ -45,7 +42,6 @@ public class PermissionService {
 
         permission.setCode(updatedPermission.getCode());
         permission.setDescription(updatedPermission.getDescription());
-
         return permissionRepository.save(permission);
     }
 

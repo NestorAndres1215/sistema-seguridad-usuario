@@ -39,7 +39,6 @@ public class RoleService {
 
         role.setName(updatedRole.getName());
         role.setDescription(updatedRole.getDescription());
-
         return roleRepository.save(role);
     }
 

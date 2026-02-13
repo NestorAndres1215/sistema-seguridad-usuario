@@ -19,8 +19,6 @@ public class SessionService {
     private final SessionRepository sessionRepository;
     private final UserRepository userRepository;
 
-
-
     public Session createSession(Long userId, Session session)  {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
