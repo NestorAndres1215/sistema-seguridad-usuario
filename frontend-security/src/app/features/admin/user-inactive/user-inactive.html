@@ -1,70 +1,9 @@
 <div class="container mt-5">
-  <div class="card  border-0 rounded-4">
-    <div class=" rounded-bottom-4">
+  <app-tabla [columnas]="columnas" [datos]="users" [botonesConfig]="botonesConfig"
+    [onDesactivar]="descativar.bind(this)">
+  </app-tabla>
 
-      @if (!users) {
-      <div class="text-center my-5">
-        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
-        <p class="mt-3 text-secondary fw-semibold">Cargando usuarios...</p>
-      </div>
+  <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChanged)="onPageChanged($event)">
+  </app-pagination>
 
-      } @else if (users.length === 0) {
-      <div class="alert alert-warning text-center shadow-sm rounded-3 mt-3">
-        <i class="fa-solid fa-triangle-exclamation me-2"></i>
-        No hay usuarios activos registrados.
-      </div>
-
-      } @else {
-
-      <!-- Tabla -->
-      <div class="table-responsive">
-        <table class="table table-hover align-middle text-center table-bordered border-light rounded-3">
-          <thead class="table-primary">
-            <tr>
-              <th>ID</th>
-              <th>Email</th>
-              <th>Rol</th>
-              <th>Estado</th>
-              <th>Proveedor</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-
-          <tbody class="table-light">
-            @for (user of paginatedUsers(); track user.id) {
-            <tr class="shadow-sm">
-              <td><strong>{{ user.id }}</strong></td>
-              <td>{{ user.email }}</td>
-              <td>
-                <span class="badge bg-secondary text-uppercase px-3 py-2">{{ user.role.name }}</span>
-              </td>
-              <td>
-                <span class="badge bg-success text-uppercase px-3 py-2">{{ user.status.code }}</span>
-              </td>
-              <td>
-                <span class="badge bg-info text-dark text-uppercase px-3 py-2">{{ user.provider }}</span>
-              </td>
-              <td>
-                <button class="btn btn-sm btn-outline-primary me-1">
-                  <i class="fa-solid fa-eye"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-warning me-1">
-                  <i class="fa-solid fa-pen"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger" (click)="descativar(user)">
-                  <i class="fa-solid fa-ban"></i>
-                </button>
-              </td>
-            </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-
-           <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChanged)="onPageChanged($event)">
-            </app-pagination>
-      }
-    </div>
-  </div>
 </div>
-<br>

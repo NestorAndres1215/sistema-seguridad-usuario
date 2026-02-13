@@ -6,10 +6,11 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from '../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { PaginationComponent } from "../../../shared/pagination/pagination";
+import { Tabla } from "../../../shared/tabla/tabla";
 
 @Component({
   selector: 'app-user-suspend',
-  imports: [FormsModule, MatDialogModule, PaginationComponent],
+  imports: [FormsModule, MatDialogModule, PaginationComponent, Tabla],
   templateUrl: './user-suspend.html',
   styleUrl: './user-suspend.css'
 })
@@ -28,7 +29,18 @@ export class UserSuspend {
 
     this.loadUsers();
   }
+    columnas = [
+    { clave: 'id', etiqueta: 'Codigo' },
+    { clave: 'email', etiqueta: 'Correo' },
+    { clave: 'name', etiqueta: 'Nombre' },
 
+  ];
+
+  botonesConfig = {
+    bloquear: true,
+    suspender: true,
+    desactivar: true
+  };
   descativar(row: any) {
     console.log(row)
     const dialogEliminar = this.dialog.open(ModalEliminacion, {

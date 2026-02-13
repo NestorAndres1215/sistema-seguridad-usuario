@@ -6,10 +6,11 @@ import { AuthService } from '../../../core/services/auth.service';
 import { UserService } from '../../../core/services/user.service';
 import { FormsModule } from '@angular/forms';
 import { PaginationComponent } from "../../../shared/pagination/pagination";
+import { Tabla } from "../../../shared/tabla/tabla";
 
 @Component({
   selector: 'app-user-inactive',
-  imports: [FormsModule, MatDialogModule, PaginationComponent],
+  imports: [FormsModule, MatDialogModule, PaginationComponent, Tabla],
   templateUrl: './user-inactive.html',
   styleUrl: './user-inactive.css'
 })
@@ -18,7 +19,18 @@ export class UserInactive {
   users: any[] = [];
   currentPage = 1;
   itemsPerPage = 10; 
+    columnas = [
+    { clave: 'id', etiqueta: 'Codigo' },
+    { clave: 'email', etiqueta: 'Correo' },
+    { clave: 'name', etiqueta: 'Nombre' },
 
+  ];
+
+  botonesConfig = {
+    bloquear: true,
+    suspender: true,
+    desactivar: true
+  };
   constructor(private userService: UserService, private dialog: MatDialog, private authService: AuthService) { }
 
   ngOnInit(): void {
