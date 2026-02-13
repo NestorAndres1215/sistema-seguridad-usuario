@@ -18,11 +18,11 @@ export class DashboardAdmin implements OnInit {
   suspendido = 0;
   bloqueado = 0;
   ngOnInit(): void {
-    this.allPorcentaje(); // ✅ Cargamos gráfico de estados dinámico
-    this.loadRoleChart(); // ✅ Gráfico de roles estático (por ahora)
+    this.allPorcentaje();
+    this.loadRoleChart(); 
   }
 
-  // ✅ Llamamos al backend y generamos el gráfico dinámico
+
   allPorcentaje() {
     this.userService.getUserStatusPercentages().subscribe({
       next: (data) => {
@@ -61,7 +61,6 @@ export class DashboardAdmin implements OnInit {
     });
   }
 
-  // ✅ Renderizamos gráfico tipo doughnut
   renderStatusChart(labels: string[], valores: number[]) {
     new Chart('statusChart', {
       type: 'doughnut',
@@ -89,7 +88,6 @@ export class DashboardAdmin implements OnInit {
     });
   }
 
-  // ✅ Traducimos o formateamos los códigos a etiquetas más amigables
   formatStatusLabel(code: string): string {
     switch (code) {
       case 'ACTIVE': return 'Activo';
@@ -100,8 +98,6 @@ export class DashboardAdmin implements OnInit {
     }
   }
 
-
-  // ✅ Gráfico de roles (estático de momento)
   loadRoleChart() {
     new Chart('roleChart', {
       type: 'bar',

@@ -1,47 +1,41 @@
 <div class="user-maintenance-container">
-  <!-- Encabezado del dashboard -->
-  <div class="card border-0 shadow-lg mb-4 rounded-4 bg-primary text-white text-center py-4">
+  <div class="card border-0 shadow-lg mb-4 rounded-4  text-dark text-center py-4">
     <h2 class="fw-bold mb-2">
       <i class="fa-solid fa-gauge-high me-2"></i> Panel de Control - Administración
     </h2>
     <p class="mb-0">Monitoreo general de usuarios, roles y estados del sistema</p>
   </div>
-
-  <!-- Tarjetas de resumen -->
   <div class="row g-4 mb-4">
     <div class="col-md-3">
       <div class="card border-0 shadow-sm text-center p-3">
-        <i class="fa-solid fa-user-check fa-2x text-success mb-2"></i>
-        <h6 class="fw-bold text-secondary">Usuarios Activos</h6>
-        <p class="fs-4 fw-bold text-success mb-0">{{activo}}</p>
+        <i class="fa-solid fa-user-check fa-2x mb-2"></i>
+        <h6 class="fw-bold ">Usuarios Activos</h6>
+        <p class="fs-4 fw-bold mb-0">{{activo}}</p>
       </div>
     </div>
     <div class="col-md-3">
       <div class="card border-0 shadow-sm text-center p-3">
-        <i class="fa-solid fa-user-xmark fa-2x text-muted mb-2"></i>
-        <h6 class="fw-bold text-secondary">Usuarios Inactivos</h6>
-        <p class="fs-4 fw-bold text-muted mb-0">{{inactivo}}</p>
+        <i class="fa-solid fa-user-xmark fa-2x  mb-2"></i>
+        <h6 class="fw-bold ">Usuarios Inactivos</h6>
+        <p class="fs-4 fw-bold mb-0">{{inactivo}}</p>
       </div>
     </div>
     <div class="col-md-3">
       <div class="card border-0 shadow-sm text-center p-3">
-        <i class="fa-solid fa-user-shield fa-2x text-warning mb-2"></i>
-        <h6 class="fw-bold text-secondary">Usuario Suspendidos</h6>
-        <p class="fs-4 fw-bold text-warning mb-0">{{suspendido}}</p>
+        <i class="fa-solid fa-user-shield fa-2x  mb-2"></i>
+        <h6 class="fw-bold ">Usuario Suspendidos</h6>
+        <p class="fs-4 fw-bold  mb-0">{{suspendido}}</p>
       </div>
     </div>
     <div class="col-md-3">
       <div class="card border-0 shadow-sm text-center p-3">
-        <i class="fa-solid fa-user-lock fa-2x text-danger mb-2"></i>
-        <h6 class="fw-bold text-secondary">Usuarios Bloqueados</h6>
-        <p class="fs-4 fw-bold text-danger mb-0">{{ bloqueado }}</p>
+        <i class="fa-solid fa-user-lock fa-2x  mb-2"></i>
+        <h6 class="fw-bold ">Usuarios Bloqueados</h6>
+        <p class="fs-4 fw-bold  mb-0">{{ bloqueado }}</p>
       </div>
     </div>
   </div>
-
-  <!-- Gráficos -->
   <div class="row g-4">
-    <!-- Estado de usuarios -->
     <div class="col-lg-6">
       <div class="card border-0 shadow-lg rounded-4 h-100">
         <div class="card-header bg-primary text-white text-center py-3 rounded-top-4">
@@ -59,8 +53,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Roles -->
     <div class="col-lg-6">
       <div class="card border-0 shadow-lg rounded-4 h-100">
         <div class="card-header bg-success text-white text-center py-3 rounded-top-4">

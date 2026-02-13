@@ -60,12 +60,6 @@
     line-height: 1.6;
 }
 
-.error-icon {
-    font-size: 4rem;
-    color: #ff6b6b;
-    margin-bottom: 30px;
-}
-
 
 .btn-home {
     background: linear-gradient(to bottom, #1e40af, #3b82f6);

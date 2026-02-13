@@ -8,7 +8,7 @@ import { LoginAuth } from '../../models/loginAuth';
   providedIn: 'root'
 })
 export class GoogleService {
-  
+
   public loginStatusSubjec = new Subject<boolean>();
 
   private backendUrl = environment.backendUrl;
@@ -45,7 +45,7 @@ export class GoogleService {
 
 
   generateToken(loginData: any) {
-    return this.http.post(`${this.backendUrl}/generate-token`, loginData);
+    return this.http.post(`${this.backendUrl}/auth/generate-token`, loginData);
   }
 
   getCurrentUser() {
