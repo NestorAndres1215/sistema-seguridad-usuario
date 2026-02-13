@@ -1,0 +1,59 @@
+<body>
+    <!-- SIDEBAR -->
+    <section id="sidebar" [ngClass]="status ? 'hide' : ''">
+        <a routerLink="/admin" class="brand">
+            <img src="/image.png" alt="Super Xtra Logo" class="imagen">
+        </a>
+        <ul class="side-menu top">
+            <li [ngClass]="{'active': isActive('/dashboard-admin')}">
+                <a routerLink="/dashboard-admin">
+                    <i class="fa-solid fa-house"></i>
+                    <span class="texto">Principal</span>
+                </a>
+            </li>
+            <li [ngClass]="{'active': isActive('/perfil-admin')}">
+                <a routerLink="/perfil-admin">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <span class="texto">Perfil</span>
+                </a>
+            </li>
+            <li [ngClass]="{'active': isActive('/user-admin')}">
+                <a routerLink="/user-admin">
+                    <i class="fa-solid fa-user"></i>
+                    <span class="texto">Usuario</span>
+                </a>
+            </li>
+            <li [ngClass]="{'active': isActive('/configuracion-admin')}">
+                <a routerLink="/configuracion-admin">
+                    <i class="fa-solid fa-gear"></i>
+                    <span class="texto">Configuracion</span>
+                </a>
+            </li>
+
+        </ul>
+        <ul class="side-menu top">
+            <li>
+                <a class="logout" (click)="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="texto">Cerrar Sesión</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- SIDEBAR -->
+
+    <!-- CONTENT -->
+    <section id="content" class="sidenav-content">
+        <!-- NAVBAR -->
+        <nav>
+            <i (click)="addToggle()" class="fas fa-bars"></i>
+            <span class="user-info">{{ username || 'Invitado' }}</span>
+
+        </nav>
+        <!-- MAIN -->
+        <div class="content-wrapper">
+            <router-outlet></router-outlet>
+        </div>
+    </section>
+    <!-- CONTENT -->
+</body>

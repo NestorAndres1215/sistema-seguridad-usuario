@@ -1,0 +1,39 @@
+<body>
+  <div class="register-container">
+    <h2>Registrarse</h2>
+
+    <form [formGroup]="formulario" (ngSubmit)="operar()">
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" formControlName="name" placeholder="Tu nombre completo" required>
+      </div>
+
+      <div class="form-group">
+        <label for="username">Nombre de usuario</label>
+        <input type="text" id="username" formControlName="username" placeholder="Tu nombre de usuario" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" formControlName="email" placeholder="tu@correo.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" formControlName="password" placeholder="Tu contraseña" required>
+      </div>
+
+      <button type="submit" class="btn">
+        <i class="fas fa-user-plus"></i> Registrarse
+      </button>
+
+      <button type="button" class="btn btn-google" (click)="registrarConGoogle()">
+        <i class="fab fa-google"></i> Registrarse con Google
+      </button>
+    </form>
+
+    <div class="login-link">
+      <p>¿Ya tienes cuenta? <a style="cursor: pointer;" (click)="volverLogin()">Iniciar sesión</a></p>
+    </div>
+  </div>
+</body>

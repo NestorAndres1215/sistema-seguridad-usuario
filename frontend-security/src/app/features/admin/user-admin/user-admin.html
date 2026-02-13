@@ -1,0 +1,29 @@
+<div class="user-maintenance-container">
+  <h2>MANTENIMIENTO DE USUARIO</h2>
+
+  <mat-tab-group [(selectedIndex)]="activeTab">
+    <mat-tab label="Usuario Activo">
+      @if (activeTab === 0) {
+        <app-user-active></app-user-active>
+      }
+    </mat-tab>
+
+    <mat-tab label="Usuario Inactivo">
+      @if (activeTab === 1) {
+        <app-user-inactive></app-user-inactive>
+      }
+    </mat-tab>
+
+    <mat-tab label="Usuario Suspendido">
+      @if (activeTab === 2) {
+        <app-user-suspend></app-user-suspend>
+      }
+    </mat-tab>
+
+    <mat-tab label="Usuario Bloqueado">
+      @if (activeTab === 3) {
+        <app-user-blocked></app-user-blocked>
+      }
+    </mat-tab>
+  </mat-tab-group>
+</div>

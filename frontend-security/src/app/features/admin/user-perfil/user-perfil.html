@@ -1,0 +1,77 @@
+<section class="user-section container mt-4">
+  <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+    <div class="card-header bg-primary text-white d-flex align-items-center">
+      <i class="fa-solid fa-circle-user fa-lg me-2"></i>
+      <h4 class="mb-0">Perfil del Usuario</h4>
+    </div>
+
+    <div class="card-body p-4">
+      <!-- Estado sin usuario -->
+      @if (!user && !isLoggedIn) {
+        <div class="text-center py-4">
+          <i class="fa-solid fa-user-slash fa-3x text-secondary mb-3"></i>
+          <p class="text-muted">No hay usuario cargado.</p>
+          <button (click)="listUser()" class="btn btn-outline-primary">
+            <i class="fa-solid fa-user-plus me-2"></i> Cargar usuario
+          </button>
+        </div>
+      }
+
+      <!-- Tarjeta con datos de usuario -->
+      @if (user) {
+        <div class="row align-items-center">
+          <!-- Foto -->
+          <div class="col-md-4 text-center mb-4 mb-md-0">
+            @if (user.photoUrl) {
+              <img
+                [src]="user.photoUrl"
+                alt="Foto de usuario"
+                class="rounded-circle shadow-sm border border-2 border-primary"
+                width="150"
+                height="150"
+              />
+            } @else {
+              <div
+                class="d-flex flex-column align-items-center justify-content-center border rounded-circle bg-light"
+                style="width: 150px; height: 150px;"
+              >
+                <i class="fa-solid fa-user fa-3x text-muted"></i>
+                <span class="small text-muted mt-1">Sin foto</span>
+              </div>
+            }
+          </div>
+
+          <!-- Info -->
+          <div class="col-md-8">
+            <h5 class="fw-bold mb-3 text-primary">
+              <i class="fa-solid fa-id-card me-2"></i> Información General
+            </h5>
+
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item px-0 py-2">
+                <i class="fa-solid fa-user text-primary me-2"></i>
+                <strong>Nombre:</strong> {{ user.name || user.fullName || '—' }}
+              </li>
+              <li class="list-group-item px-0 py-2">
+                <i class="fa-solid fa-user-pen text-info me-2"></i>
+                <strong>Usuario:</strong> {{ user.username || '—' }}
+              </li>
+              <li class="list-group-item px-0 py-2">
+                <i class="fa-solid fa-envelope text-danger me-2"></i>
+                <strong>Email:</strong> {{ user.email || '—' }}
+              </li>
+              <li class="list-group-item px-0 py-2">
+                <i class="fa-solid fa-shield-halved text-warning me-2"></i>
+                <strong>Rol:</strong> {{ user.role?.name || 'Sin rol' }}
+              </li>
+              <li class="list-group-item px-0 py-2">
+                <i class="fa-solid fa-circle text-success me-2"></i>
+                <strong>Estado:</strong> {{ user.status?.code }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

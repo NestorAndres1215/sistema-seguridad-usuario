@@ -1,0 +1,48 @@
+<body>
+    <!-- SIDEBAR -->
+    <section id="sidebar" [ngClass]="status ? 'hide' : ''">
+        <a routerLink="/admin" class="brand">
+            <img src="/image.png" alt="Super Xtra Logo" class="imagen">
+        </a>
+        <ul class="side-menu top">
+            <li [ngClass]="{'active': isActive('/dashboard')}">
+                <a routerLink="/dashboard">
+                    <i class="fas fa-home"></i>
+                    <span class="texto">Principal</span>
+                </a>
+            </li>
+            <li [ngClass]="{'active': isActive('/user')}">
+                <a routerLink="/user">
+                    <i class="fas fa-user"></i>
+                    <span class="texto">Usuario</span>
+                </a>
+            </li>
+        
+        </ul>
+        <ul class="side-menu top">
+           
+            <li>
+                <a class="logout" (click)="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="texto">Cerrar Sesión</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- SIDEBAR -->
+
+    <!-- CONTENT -->
+    <section id="content">
+        <!-- NAVBAR -->
+        <nav>
+            <i (click)="addToggle()" class="fas fa-bars"></i>
+         <span class="user-info">{{ username || 'Invitado' }}</span>
+
+        </nav>
+        <!-- MAIN -->
+        <main>
+            <router-outlet></router-outlet>
+        </main>
+    </section>
+    <!-- CONTENT -->
+</body>

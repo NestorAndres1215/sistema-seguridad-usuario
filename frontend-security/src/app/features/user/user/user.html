@@ -1,0 +1,33 @@
+<section class="user-section">
+  <h2>👤 Perfil del usuario</h2>
+
+  <!-- Estado de carga -->
+  <div *ngIf="!user && !isLoggedIn" class="empty">
+    <p><i class="fa-solid fa-exclamation-triangle"></i> No hay usuario cargado.</p>
+    <button (click)="listUser()" class="btn">
+      <i class="fa-solid fa-user-plus"></i> Cargar usuario
+    </button>
+  </div>
+
+  <!-- Tarjeta de usuario -->
+  <div *ngIf="user" class="user-card">
+    <!-- Foto -->
+    <div class="photo-wrapper">
+      <img *ngIf="user.photoUrl; else noPhoto" [src]="user.photoUrl" alt="Foto de usuario" class="user-photo" />
+      <ng-template #noPhoto>
+        <div class="user-photo-placeholder">
+          <i class="fa-solid fa-user"></i> Sin foto
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Datos -->
+    <div class="user-info">
+      <p><i class="fa-solid fa-id-card"></i> <strong>Nombre:</strong> {{ user.name || user.fullName || '—' }}</p>
+      <p><i class="fa-solid fa-user"></i> <strong>Usuario:</strong> {{ user.username || user.login  || '—' }}</p>
+      <p><i class="fa-solid fa-envelope"></i> <strong>Email:</strong> {{ user.email || '—' }}</p>
+      <p><i class="fa-solid fa-user-shield"></i> <strong>Rol:</strong> {{ user.role?.name || 'Sin rol' }}</p>
+      <p><i class="fa-solid fa-circle-check"></i> <strong>Estado:</strong> {{ user.status?.code }}</p>
+    </div>
+  </div>
+</section>
