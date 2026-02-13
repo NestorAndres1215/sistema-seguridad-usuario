@@ -19,13 +19,7 @@ public class SessionService {
     private final SessionRepository sessionRepository;
     private final UserRepository userRepository;
 
-    public Session createSession(Long userId, Session session)  {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        session.setUser(user);
-        return sessionRepository.save(session);
-    }
 
     public Optional<Session> getSessionById(Long id) {
         return sessionRepository.findById(id);
