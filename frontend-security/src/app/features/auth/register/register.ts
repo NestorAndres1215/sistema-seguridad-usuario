@@ -8,7 +8,7 @@ import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-register',
-  standalone: true, // ✅ si usas imports en el decorador, esto es necesario
+  standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './register.html',
   styleUrls: ['./register.css']
@@ -28,7 +28,7 @@ export class Register implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.initForm(); // ✅ Aquí inicializas el formulario antes de renderizar
+    this.initForm(); 
   }
 
   initForm() {
@@ -49,19 +49,16 @@ export class Register implements OnInit {
       password: this.formulario.get('password')?.value
     };
 
-    console.log('📦 Datos del usuario a registrar:', usuario);
+
 
     this.userService.createUser(usuario).subscribe({
       next: (response) => {
         console.log('✅ Usuario registrado:', response);
         this.alertService.success('Registro exitoso', `¡Bienvenido ${usuario.name}!`);
-        this.formulario.reset(); // Limpia el formulario
-        // Opcional: redirigir al login
+        this.formulario.reset(); 
          this.router.navigate(['/login']);
       },
       error: (err) => {
-        console.error('❌ Error al registrar usuario:', err);
-
         if (err.error?.message?.includes('Username already exists')) {
           this.alertService.error('Error', 'El nombre de usuario ya existe.');
         } else if (err.error?.message?.includes('Email already exists')) {

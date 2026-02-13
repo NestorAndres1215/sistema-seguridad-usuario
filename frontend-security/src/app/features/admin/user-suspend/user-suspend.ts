@@ -15,12 +15,11 @@ import { FormsModule } from '@angular/forms';
 export class UserSuspend {
   users: any[] | null = null;
   currentPage = 1;
-  itemsPerPage = 10; // valor por defecto
-
+  itemsPerPage = 10; 
   constructor(private userService: UserService, private dialog: MatDialog, private authService: AuthService) { }
 
   ngOnInit(): void {
-    // Leer valor guardado en localStorage
+
     const savedItems = localStorage.getItem('itemsPerPage');
     if (savedItems) {
       this.itemsPerPage = parseInt(savedItems, 10);
@@ -28,6 +27,7 @@ export class UserSuspend {
 
     this.loadUsers();
   }
+
   descativar(row: any) {
     console.log(row)
     const dialogEliminar = this.dialog.open(ModalEliminacion, {
@@ -48,35 +48,33 @@ export class UserSuspend {
       });
     })
   }
+
   loadUsers(): void {
     this.userService.getUsersSuspend().subscribe({
       next: (data) => (this.users = data),
       error: (err) => {
-        console.error('Error cargando usuarios:', err);
         this.users = [];
       },
     });
   }
 
-  // Total de páginas
+
   get totalPages(): number {
     return this.users ? Math.ceil(this.users.length / this.itemsPerPage) : 0;
   }
 
-  // Usuarios paginados
   paginatedUsers(): any[] {
     if (!this.users) return [];
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     return this.users.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
-  // Cambiar cantidad por página
   onItemsPerPageChange(): void {
     localStorage.setItem('itemsPerPage', this.itemsPerPage.toString());
     this.currentPage = 1;
   }
 
-  // Navegación
+
   nextPage(): void {
     if (this.currentPage < this.totalPages) this.currentPage++;
   }

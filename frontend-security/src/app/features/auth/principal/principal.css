@@ -45,7 +45,7 @@
     color: white;
 }
 
-/* Main Section */
+
 main {
     max-width: 1200px;
     margin: 2rem auto;
@@ -84,10 +84,6 @@ main p {
     max-width: 300px;
     transition: transform 0.3s;
     text-align: center;
-}
-
-.card:hover {
-    transform: translateY(-5px);
 }
 
 .card i {
@@ -137,9 +133,7 @@ main p {
     transition: transform 0.3s;
 }
 
-.value-item:hover {
-    transform: translateY(-5px);
-}
+
 
 .value-item i {
     font-size: 2.5rem;

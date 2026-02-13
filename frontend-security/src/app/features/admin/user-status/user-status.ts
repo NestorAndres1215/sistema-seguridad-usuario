@@ -11,12 +11,12 @@ import { StatusService } from '../../../core/services/status.service';
 export class UserStatus {
   status: any[] | null = null;
   currentPage = 1;
-  itemsPerPage = 10; // valor por defecto
+  itemsPerPage = 10; 
 
   constructor(private statusService: StatusService) { }
 
   ngOnInit(): void {
-    // Leer valor guardado en localStorage
+
     const savedItems = localStorage.getItem('itemsPerPage');
     if (savedItems) {
       this.itemsPerPage = parseInt(savedItems, 10);
@@ -34,25 +34,23 @@ export class UserStatus {
     });
   }
 
-  // Total de páginas
   get totalPages(): number {
     return this.status ? Math.ceil(this.status.length / this.itemsPerPage) : 0;
   }
 
-  // Usuarios paginados
   paginatedUsers(): any[] {
     if (!this.status) return [];
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     return this.status.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
-  // Cambiar cantidad por página
+
   onItemsPerPageChange(): void {
     localStorage.setItem('itemsPerPage', this.itemsPerPage.toString());
     this.currentPage = 1;
   }
 
-  // Navegación
+
   nextPage(): void {
     if (this.currentPage < this.totalPages) this.currentPage++;
   }

@@ -1,5 +1,4 @@
 <body>
-    <!-- SIDEBAR -->
     <section id="sidebar" [ngClass]="status ? 'hide' : ''">
         <a routerLink="/admin" class="brand">
             <img src="/image.png" alt="Super Xtra Logo" class="imagen">
@@ -40,20 +39,15 @@
             </li>
         </ul>
     </section>
-    <!-- SIDEBAR -->
 
-    <!-- CONTENT -->
     <section id="content" class="sidenav-content">
-        <!-- NAVBAR -->
         <nav>
             <i (click)="addToggle()" class="fas fa-bars"></i>
             <span class="user-info">{{ username || 'Invitado' }}</span>
 
         </nav>
-        <!-- MAIN -->
         <div class="content-wrapper">
             <router-outlet></router-outlet>
         </div>
     </section>
-    <!-- CONTENT -->
 </body>

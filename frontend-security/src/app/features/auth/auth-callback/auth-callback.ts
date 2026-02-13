@@ -32,27 +32,18 @@ export class AuthCallback {
       return;
     }
 
-    // 2️⃣ Llamar al backend para intercambiar code por token
     this.authService.loginWithCode(code).subscribe({
       next: (res) => {
-        console.log('✅ Login exitoso');
-        console.log('Token:', res.token);
-        console.log('Email:', res.email);
-        console.log('Name:', res.name);
 
-        // Guardar token en localStorage
         localStorage.setItem('jwt', res.token);
         this.authService.getCurrentUser().subscribe({
           next: (user) => {
             console.log('👤 Usuario actual:', user.username);
             localStorage.setItem('username', user.email)
-
-
-            // Redirigir al dashboard
             this.router.navigate(['/dashboard']);
           },
           error: (err) => {
-            console.error('❌ Error al obtener usuario:', err);
+
             this.router.navigate(['/login']);
           },
         });

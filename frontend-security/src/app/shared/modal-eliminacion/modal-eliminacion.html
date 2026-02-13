@@ -3,14 +3,10 @@
         <div class="card-header  text-center rounded-top-4">
             <h2 class="m-0" style="font-family: monospace;">{{ titulo }}</h2>
         </div>
-
         <div class="card-body ">
-            <!-- Mensaje -->
             <p class="text-center fw-semibold" style="font-family: monospace; margin-bottom: 2.5rem;">
                 {{ subtitulo }}
             </p>
-
-            <!-- Campo de razón opcional -->
             @if (razon && razon.trim() !== '') {
             <div class="mb-3" style="font-family: monospace;">
                 <label for="razonInput" class="form-label fw-semibold text-secondary">Motivo:</label>
@@ -18,8 +14,6 @@
                     [placeholder]="razon" />
             </div>
             }
-
-            <!-- Botones -->
             <div class="d-flex justify-content-center gap-3 mt-4">
                 <button type="button" class="btn btn-success px-4" (click)="close('CONFIRMAR')">
                     <i class="fas fa-check me-2"></i> Confirmar
