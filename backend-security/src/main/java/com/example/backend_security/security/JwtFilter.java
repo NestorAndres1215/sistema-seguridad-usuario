@@ -23,8 +23,6 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
 
-
-
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -49,32 +47,26 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
-            try {
-                usernameOrEmail = this.jwtUtil.extractUsername(jwtToken);
-            } catch (Exception e) {
-                throw new JwtAuthenticationException(AuthConstants.TOKEN_INVALIDO);
-            }
+            usernameOrEmail = this.jwtUtil.extractUsername(jwtToken);
         }
 
         if (usernameOrEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            try {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(usernameOrEmail);
 
-                if (this.jwtUtil.validateToken(jwtToken, userDetails)) {
-                    UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(
-                                    userDetails, null, userDetails.getAuthorities()
-                            );
-                    authToken.setDetails(
-                            new WebAuthenticationDetailsSource().buildDetails(request)
-                    );
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                } else {
-                    throw new JwtAuthenticationException(AuthConstants.TOKEN_NO_VALIDO_PARA_USUARIO);
-                }
-            } catch (Exception ex) {
-                throw new JwtAuthenticationException(AuthConstants.ERROR_VALIDANDO_TOKEN);
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(usernameOrEmail);
+
+            if (this.jwtUtil.validateToken(jwtToken, userDetails)) {
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities()
+                        );
+                authToken.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            } else {
+                throw new JwtAuthenticationException(AuthConstants.TOKEN_NO_VALIDO_PARA_USUARIO);
             }
+
         }
 
         filterChain.doFilter(request, response);

@@ -17,8 +17,6 @@ public class UserStatusService {
 
     private final UserStatusRepository statusRepository;
 
-
-
     public UserStatus createStatus(UserStatus status) {
         if (statusRepository.findByCode(status.getCode()).isPresent()) {
             throw new ResourceAlreadyExistsException("Status already exists");

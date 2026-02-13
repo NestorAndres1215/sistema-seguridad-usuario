@@ -21,7 +21,6 @@ public class GoogleService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    // Constructor para inyectar las propiedades
     public GoogleService(
             @Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId,
             @Value("${spring.security.oauth2.client.registration.google.client-secret}") String clientSecret,
@@ -34,9 +33,7 @@ public class GoogleService {
 
     public GoogleResponse exchangeCodeForToken(String code) {
         String tokenUrl = "https://oauth2.googleapis.com/token";
-        System.out.println("CODE = " + code);
-        System.out.println("CLIENT_ID = " + clientId);
-        System.out.println("REDIRECT_URI = " + redirectUri);
+
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", code);
         params.add("client_id", clientId);
@@ -58,7 +55,6 @@ public class GoogleService {
         if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
             throw new GoogleServiceException(GoogleConstants.ERROR_CODE_GOOGLE);
         }
-
 
         return response.getBody();
     }
@@ -83,7 +79,6 @@ public class GoogleService {
         }
 
         return response.getBody();
-
 
     }
 }

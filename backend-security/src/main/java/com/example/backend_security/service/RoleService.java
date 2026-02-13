@@ -33,15 +33,6 @@ public class RoleService {
         return roleRepository.findById(id);
     }
 
-    public Role updateRole(Long id, Role updatedRole) {
-        Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
-
-        role.setName(updatedRole.getName());
-        role.setDescription(updatedRole.getDescription());
-        return roleRepository.save(role);
-    }
-
     public void deleteRole(Long id) {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
