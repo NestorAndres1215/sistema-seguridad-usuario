@@ -30,35 +30,29 @@ public class GoogleController {
 
 
     @PostMapping("/loginWithGoogle")
-    public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> body) {
-        try {
-            String code = body.get("code");
+    public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> body) throws Exception {
 
+        String code = body.get("code");
 
-            // 1️⃣ Intercambiar code por token en Google
-            GoogleResponse tokenResponse = googleService.exchangeCodeForToken(code);
-            // 2️⃣ Obtener información del usuario
-            Map<String, Object> userInfo = googleService.getUserInfo(tokenResponse.getAccess_token());
-            String name = (String) userInfo.get("name");
+        GoogleResponse tokenResponse = googleService.exchangeCodeForToken(code);
 
+        Map<String, Object> userInfo = googleService.getUserInfo(tokenResponse.getAccess_token());
+        String name = (String) userInfo.get("name");
 
-            // 3️⃣ Registrar/actualizar en MySQL
-            User user = userService.registerOrUpdateOAuthUser(userInfo);
-            // 4️⃣ Generar JWT propio
-            String jwt = jwtUtil.generateToken(user);
-            // 5️⃣ Guardar token en base de datos
-            tokenService.createToken(user.getId(), jwt);
+        User user = userService.registerOrUpdateOAuthUser(userInfo);
 
-            System.out.println(jwt);
-            return ResponseEntity.ok(Map.of(
-                    "token", jwt,
-                    "email", user.getEmail(),
-                    "name", user.getName(),
-                    "picture", user.getPhotoUrl()
-            ));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        String jwt = jwtUtil.generateToken(user);
+
+        tokenService.createToken(user.getId(), jwt);
+
+        System.out.println(jwt);
+        return ResponseEntity.ok(Map.of(
+                "token", jwt,
+                "email", user.getEmail(),
+                "name", user.getName(),
+                "picture", user.getPhotoUrl()
+        ));
+
 
     }
 
@@ -71,26 +65,18 @@ public class GoogleController {
 
     @GetMapping("/login-url")
     public ResponseEntity<Map<String, String>> getLoginUrl() {
-        try {
-            String scope = "openid email profile";
-            String responseType = "code";
 
-            String url = "https://accounts.google.com/o/oauth2/v2/auth"
-                    + "?client_id=" + clientId
-                    + "&redirect_uri=" + redirectUri
-                    + "&response_type=" + responseType
-                    + "&scope=" + scope;
+        String scope = "openid email profile";
+        String responseType = "code";
 
-            return ResponseEntity.ok(Map.of("url", url));
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Devuelve un mensaje de error controlado
-            Map<String, String> error = Map.of(
-                    "error", "No se pudo generar la URL de login",
-                    "details", e.getMessage()
-            );
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-        }
+        String url = "https://accounts.google.com/o/oauth2/v2/auth"
+                + "?client_id=" + clientId
+                + "&redirect_uri=" + redirectUri
+                + "&response_type=" + responseType
+                + "&scope=" + scope;
+
+        return ResponseEntity.ok(Map.of("url", url));
+
     }
 
 

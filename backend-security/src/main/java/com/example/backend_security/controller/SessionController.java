@@ -33,7 +33,6 @@ public class SessionController {
         return ResponseEntity.ok(sessionService.getSessionById(id));
     }
 
-
     @GetMapping("/user/{username}")
     public ResponseEntity<List<Session>> getSessionsByUser(@PathVariable String username) {
         return ResponseEntity.ok(sessionService.getSessionsByUser(username));
