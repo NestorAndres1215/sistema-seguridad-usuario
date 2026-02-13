@@ -24,13 +24,11 @@ public class Token {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(length = 512, nullable = false)
     private String token;
 
     @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expirationDate;
 
-    @Column(length = 512, nullable = false)
     private String valid;
 
     @Column(name = "creation_date")

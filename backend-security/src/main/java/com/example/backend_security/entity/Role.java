@@ -23,7 +23,7 @@ public class Role {
 
     @Column(length = 50, nullable = false, unique = true)
     private String name;
-    @Column(length = 50, nullable = false, unique = true)
+
     private String description;
 
     @ManyToMany(fetch = FetchType.EAGER)

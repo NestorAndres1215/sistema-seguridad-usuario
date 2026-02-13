@@ -25,22 +25,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 100)
     private String name;
 
-    @Column(length = 255)
     private String username;
 
     @Column(length = 100, nullable = false, unique = true)
     private String email;
 
-    @Column(length = 255)
     private String password;
 
     @Column(length = 50)
     private String provider;
 
-    @Column(length = 255)
     private String photoUrl;
 
     @Lob
@@ -52,7 +48,6 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "role_id")
-
     private Role role;
 
     private LocalDateTime lastLogin;

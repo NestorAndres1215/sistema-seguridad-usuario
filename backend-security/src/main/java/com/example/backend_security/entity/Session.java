@@ -25,7 +25,6 @@ public class Session {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(length = 100)
     private String ip;
 
     @Column(columnDefinition = "TEXT")
@@ -35,7 +34,6 @@ public class Session {
 
     private LocalDateTime end;
 
-    @Column(length = 512, nullable = false)
     private String active;
 
 }
