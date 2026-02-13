@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { UserService } from '../../../core/services/user.service';
+import { Titulo } from "../../../shared/titulo/titulo";
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard-admin',
   templateUrl: './dashboard-admin.html',
-  styleUrls: ['./dashboard-admin.css']
+  styleUrls: ['./dashboard-admin.css'],
+  imports: [Titulo]
 })
 export class DashboardAdmin implements OnInit {
 
