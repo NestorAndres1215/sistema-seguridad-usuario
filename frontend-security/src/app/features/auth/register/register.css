@@ -85,7 +85,6 @@
     text-decoration: underline;
 }
 
-/* Responsive Design */
 @media (max-width: 480px) {
     .register-container {
         padding: 1.5rem;

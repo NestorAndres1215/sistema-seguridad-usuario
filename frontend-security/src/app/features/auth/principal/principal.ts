@@ -8,10 +8,12 @@ import { Router } from '@angular/router';
   styleUrl: './principal.css'
 })
 export class Principal {
-register() {
-this.router.navigate(['/register'])
-}
- constructor(private router: Router) {} // Inyectamos Router
+
+ constructor(private router: Router) { }
+ 
+  register() {
+    this.router.navigate(['/register'])
+  }
 
   iniciarSesion() {
     this.router.navigate(['/login']);

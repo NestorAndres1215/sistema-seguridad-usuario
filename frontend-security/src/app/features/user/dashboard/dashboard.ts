@@ -18,15 +18,9 @@ export class Dashboard {
 
   logout() {
     this.authService.logout().subscribe({
-      next: (res) => {
-
+      next: () => {
         this.router.navigate(['/login']);
-
-        console.log('🔴 Sesión cerrada:', res);
       },
-      error: (err) => {
-        console.error('❌ Error en logout:', err);
-      }
     });
   }
 
