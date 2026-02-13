@@ -1,79 +1,29 @@
-    #sidebar.hide~#content {
-        width: calc(100% - 60px);
-        left: 60px;
-    }
+ #sidebar.hide~#content {
+     width: calc(100% - 60px);
+     left: 60px;
+ }
 
-    .cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 20px;
-        padding: 20px;
-        margin-bottom: 30px;
-    }
+ .cards {
+     display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+     gap: 20px;
+     padding: 20px;
+     margin-bottom: 30px;
+ }
 
-   
+ .card i {
+     color: #2a5298;
+     margin-bottom: 10px;
+ }
 
+ .card h3 {
+     font-size: 18px;
+     color: #2a5298;
+     margin-bottom: 10px;
+ }
 
-
-    .card i {
-        color: #2a5298;
-        margin-bottom: 10px;
-    }
-
-    .card h3 {
-        font-size: 18px;
-        color: #2a5298;
-        margin-bottom: 10px;
-    }
-
-    .card p {
-        font-size: 24px;
-        font-weight: 600;
-        color: #ff6f61;
-    }
-
-
-
-    /* Responsive Design */
-    @media screen and (max-width: 768px) {
-        #content {
-            width: calc(100% - 200px);
-            left: 200px;
-        }
-
-        #sidebar.hide~#content {
-            width: calc(100% - 60px);
-            left: 60px;
-        }
-
-        .cards {
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            padding: 15px;
-        }
-
-        .card h3 {
-            font-size: 16px;
-        }
-
-        .card p {
-            font-size: 20px;
-        }
-
-
-    }
-
-    @media screen and (max-width: 576px) {
-        #content {
-            width: calc(100% - 60px);
-            left: 60px;
-        }
-
-        .cards {
-            grid-template-columns: 1fr;
-            padding: 10px;
-        }
-
-        .card {
-            padding: 15px;
-        }
-    }
+ .card p {
+     font-size: 24px;
+     font-weight: 600;
+     color: #ff6f61;
+ }
