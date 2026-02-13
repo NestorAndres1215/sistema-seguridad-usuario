@@ -6,10 +6,11 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from '../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { PaginationComponent } from "../../../shared/pagination/pagination";
+import { Tabla } from "../../../shared/tabla/tabla";
 
 @Component({
   selector: 'app-user-blocked',
-  imports: [FormsModule, MatDialogModule, PaginationComponent],
+  imports: [FormsModule, MatDialogModule, PaginationComponent, Tabla],
   templateUrl: './user-blocked.html',
   styleUrl: './user-blocked.css'
 })
@@ -19,6 +20,19 @@ export class UserBlocked {
   currentPage = 1;
   itemsPerPage = 10;
 
+    columnas = [
+    { clave: 'id', etiqueta: 'Codigo' },
+    { clave: 'email', etiqueta: 'Correo' },
+    { clave: 'name', etiqueta: 'Nombre' },
+
+  ];
+
+  botonesConfig = {
+    bloquear: true,
+    suspender: true,
+    desactivar: true
+  };
+  
   constructor(private userService: UserService, private dialog: MatDialog, private authService: AuthService) { }
 
   ngOnInit(): void {
