@@ -13,52 +13,36 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  // =========================
-  // Listar todos los usuarios
-  // =========================
+
   getAllUsers(): Observable<any[]> {
     return this.http.get<any[]>(`${this.backendUrl}/users`);
   }
 
-  // =========================
-  // Crear un usuario
-  // =========================
   createUser(request: Registrar): Observable<any> {
     return this.http.post(`${this.backendUrl}/users`, request, {
       responseType: 'text'
     });
   }
 
-  // =========================
-  // Buscar usuario por ID
-  // =========================
+
   getUserById(id: number): Observable<any> {
     return this.http.get<any>(`${this.backendUrl}/users/${id}`);
   }
 
-  // =========================
-  // Buscar usuario por username
-  // =========================
+
   getUserByUsername(username: string): Observable<any> {
     return this.http.get<any>(`${this.backendUrl}/users/username/${username}`);
   }
 
-  // =========================
-  // Buscar usuario por email
-  // =========================
   getUserByEmail(email: string): Observable<any> {
     return this.http.get<any>(`${this.backendUrl}/users/email/${email}`);
   }
 
-  // =========================
-  // Actualizar usuario
-  // =========================
+
   updateUser(userId: number, updatedUser: Registrar): Observable<any> {
     return this.http.put<any>(`${this.backendUrl}/users/${userId}`, updatedUser);
   }
-  // =========================
-  // Listar usuarios por estados
-  // =========================
+
   getUsersActive(): Observable<any[]> {
     return this.http.get<any[]>(`${this.backendUrl}/users/status-active`);
   }
@@ -72,9 +56,7 @@ export class UserService {
   getUsersSuspend(): Observable<any[]> {
     return this.http.get<any[]>(`${this.backendUrl}/users/status-suspend`);
   }
-  // =========================
-  // Listar usuarios por rol
-  // =========================
+
   getUsersByRoleUser(): Observable<any[]> {
     return this.http.get<any[]>(`${this.backendUrl}/users/role-user`);
   }
@@ -83,7 +65,6 @@ export class UserService {
     return this.http.get<any[]>(`${this.backendUrl}/users/role-admin`);
   }
 
-  // ------------------ ROLE_USER ------------------
   getActiveUsersByRoleUser(): Observable<any[]> {
     return this.http.get<any[]>(`${this.backendUrl}/users/role-user/active`);
   }
@@ -100,7 +81,6 @@ export class UserService {
     return this.http.get<any[]>(`${this.backendUrl}/users/role-user/blocked`);
   }
 
-  // ------------------ ROLE_ADMIN ------------------
   getActiveUsersByRoleAdmin(): Observable<any[]> {
     return this.http.get<any[]>(`${this.backendUrl}/users/role-admin/active`);
   }
@@ -117,26 +97,21 @@ export class UserService {
     return this.http.get<any[]>(`${this.backendUrl}/users/role-admin/blocked`);
   }
 
-
-  // 🔹 Inactivar usuario
   inactivarUsuario(userId: number): Observable<any> {
     return this.http.put(`${this.backendUrl}/users/inactive/${userId}`, {});
   }
 
-  // 🔹 Activar usuario
   activarUsuario(userId: number): Observable<any> {
     return this.http.put(`${this.backendUrl}/users/active/${userId}`, {});
   }
 
-  // 🔹 Suspend usuario
   suspenderUsuario(userId: number): Observable<any> {
     return this.http.put(`${this.backendUrl}/users/suspend/${userId}`, {});
   }
-  // 🔹 Blocked usuario
+
   blockedUsuario(userId: number): Observable<any> {
     return this.http.put(`${this.backendUrl}/users/blocked/${userId}`, {});
   }
-
 
   getUserStatusPercentages() {
     return this.http.get<any[]>(`${this.backendUrl}/users/status-percentages`);

@@ -12,10 +12,11 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  // Método para generar el token
+
   generateToken(loginData: any) {
     return this.http.post(`${this.backendUrl}/auth/generate-token`, loginData);
   }
+
   getCurrentUser() {
     const token = localStorage.getItem('jwt');
     console.log(token)
@@ -24,29 +25,19 @@ export class AuthService {
       console.log(headers)
       return this.http.get(`${this.backendUrl}/auth/actual-usuario`, { headers });
     } else {
-      // Si no tienes el token, lanza un error o maneja de otra manera
-      return this.http.get(`${this.backendUrl}/auth/actual-usuario`);  // O puedes manejarlo de otra forma
+
+      return this.http.get(`${this.backendUrl}/auth/actual-usuario`);
     }
   }
 
-
-
-  // =========================
-  // Obtener token
-  // =========================
   get token(): string | null {
     return localStorage.getItem('jwt');
   }
 
-  // =========================
-  // Guardar token
-  // =========================
   setToken(token: string) {
     localStorage.setItem('jwt', token);
   }
-  // =========================
-  // Logout: elimina token local y llama al backend
-  // =========================
+
   logout(): Observable<any> {
     const token = localStorage.getItem('jwt');
 
@@ -58,7 +49,6 @@ export class AuthService {
       'Authorization': `Bearer ${token}`
     });
 
-    // 👇 Cambia responseType a 'text' para evitar el error
     return this.http.post(`${this.backendUrl}/auth/logout`, {}, { headers, responseType: 'text' as 'json' }).pipe(
       tap(response => {
 

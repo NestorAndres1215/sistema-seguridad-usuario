@@ -6,7 +6,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(GoogleService);
   const token = authService.token;
 
-  console.log('🔍 Interceptor activo. Token encontrado:', token);
 
   if (token) {
     const cloned = req.clone({
