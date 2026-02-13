@@ -63,10 +63,6 @@
     margin-bottom: 1rem;
 }
 
-.card h3 {
-    color: #007BFF;
-    margin-bottom: 1rem;
-}
 
 .value-items {
     display: flex;
@@ -92,7 +88,3 @@
     margin-bottom: 1rem;
 }
 
-.value-item h3 {
-    color: #007BFF;
-    margin-bottom: 1rem;
-}
