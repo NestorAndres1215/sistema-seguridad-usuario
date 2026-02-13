@@ -1,0 +1,72 @@
+.content-area {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.custom-table {
+    width: 100%;
+    background-color: #ffffff;
+    border-collapse: collapse;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.6s ease-in;
+}
+
+.custom-table thead {
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    color: #ffffff;
+}
+
+.table-container {
+    overflow-x: auto;
+    padding: 30px 0px 0px 0px;
+}
+
+.custom-table th {
+    padding: 14px;
+    font-size: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.custom-table th:first-child {
+    border-top-left-radius: 10px;
+}
+
+.custom-table th:last-child {
+    border-top-right-radius: 10px;
+}
+
+.custom-table tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.custom-table td {
+    padding: 14px;
+    font-size: 0.95rem;
+    color: #333333;
+    cursor: pointer;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.action-buttons .btn {
+    padding: 8px;
+    background: none;
+    box-shadow: none;
+    transition: color 0.3s ease, transform 0.2s ease;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}

@@ -1,0 +1,80 @@
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px;
+    width: 100%;
+    max-width: 100%;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #ffffff;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 50px;
+}
+
+.eliminar {
+    background: linear-gradient(135deg, #8b0000, #ff4d4d);
+}
+
+.mensaje,
+.detalle {
+    background: linear-gradient(135deg, #0f734d, #34d399);
+}
+
+.registrar {
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+}
+.button,
+.inicio,
+.editar,
+.suspender {
+   background-color: #ff6f61;
+}
+
+.listado,
+.bloquear {
+    background: linear-gradient(135deg, #5b21b6, #8f63f5);
+}
+
+
+.inhabilitado {
+    background: linear-gradient(135deg, #2aa9a1, #6fd3cb);
+}
+
+.imprimir {
+    background: linear-gradient(135deg, #c58a00, #fbbf24);
+}
+
+.desactivar {
+    background: linear-gradient(135deg, #0e7490, #38bdf8);
+}
+
+.limpiar,
+.actualizar {
+    background: linear-gradient(135deg, #0f766e, #14b8a6);
+}
+
+.modulo,
+.activar {
+    background: linear-gradient(135deg, #7a9b00, #bef453);
+}
+
+.pdf,
+.logout,
+.eliminar,
+.cancelar {
+    background: linear-gradient(135deg, #8a341e, #f6513b);
+}
+
+.excel,
+.confirmar {
+    background: linear-gradient(135deg, #1aa36a, #41d48d);
+}

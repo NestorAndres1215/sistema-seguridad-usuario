@@ -1,1 +1,51 @@
-<p>tabla works!</p>
+<div class="table-responsive table-container mb-4">
+  <table class=" custom-table">
+    <thead>
+      <tr>
+        <th *ngFor="let col of columnas" class="text-center sortable" (click)="ordenarPor(col.clave)">
+          {{ col.etiqueta }}
+        </th>
+        <th *ngIf="hasActionButtons()" class="text-center">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let fila of datos" class="table-row animate__animated animate__fadeInUp">
+        <td *ngFor="let col of columnas" class="text-center">
+          {{ obtenerValor(fila, col.clave) }}
+        </td>
+        <td *ngIf="hasActionButtons()" class="actions-column">
+          <div class="action-buttons d-flex justify-content-center">
+            <app-button *ngIf="botonesConfig.ver" label="Detalle" icon="fas fa-info-circle" color="detalle"
+              (click)="onVer(fila)"></app-button>
+            <app-button *ngIf="botonesConfig.actualizar" label="Actualizar" icon="fas fa-sync-alt" color="actualizar"
+              (click)="onActualizar(fila)"></app-button>
+            <app-button *ngIf="botonesConfig.activar" label="Activar" icon="fas fa-sign-out-alt" color="activar"
+              (onClick)="onActivar(fila)"></app-button>
+            <app-button *ngIf="botonesConfig.suspender" label="Suspender" icon="fas fa-pause-circle" color="suspender"
+              (onClick)="onSuspender(fila)"></app-button>
+            <app-button *ngIf="botonesConfig.desactivar" label="Desactivar" icon="fas fa-user-slash" color="desactivar"
+              (onClick)="onDesactivar(fila)"></app-button>
+            <app-button *ngIf="botonesConfig.inhabilitar" label="Inhabilitado" icon="fas fa-ban" color="inhabilitado"
+              (onClick)="onInhabilitar(fila)"></app-button>
+            <app-button *ngIf="botonesConfig.listado" label="Listado" icon="fas fa-list" color="listado"
+              (onClick)="onListado(fila)"></app-button>
+            <app-button *ngIf="botonesConfig.bloquear" label="Bloquear" icon="fas fa-lock" color="bloquear"
+              (onClick)="onBloquear(fila)"></app-button>
+            <app-button *ngIf="botonesConfig.imprimir" label="Imprimir" icon="fas fa-print" color="imprimir"
+              (click)="onImprimir(fila)"></app-button>
+            <app-button *ngIf="botonesConfig.cancelar" label="Cancelar" icon="fas fa-times" color="cancelar"
+              (click)="onCancelar(fila)"></app-button>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="(datos || []).length === 0">
+        <td [attr.colspan]="columnas.length + (hasActionButtons() ? 1 : 0)" class="text-center text-muted">
+          <div class="fs-1 text-secondary mb-3">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <h6 class="fw-semibold mb-0 text-secondary">No hay historial para mostrar</h6>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
