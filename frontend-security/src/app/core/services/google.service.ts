@@ -52,7 +52,7 @@ export class GoogleService {
       return throwError(() => new Error('No hay token disponible'));
     }
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any>(`${this.backendUrl}/actual-usuario`, { headers });
+    return this.http.get<any>(`${this.backendUrl}/auth/actual-usuario`, { headers });
   }
 
 
