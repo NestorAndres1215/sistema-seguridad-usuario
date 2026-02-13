@@ -118,23 +118,3 @@
     left: 20%;
 
 }
-
-
-@media (max-width: 768px) {
-    .error-container {
-        margin: 20px;
-        padding: 40px 30px;
-    }
-
-    .error-number {
-        font-size: 6rem;
-    }
-
-    .error-title {
-        font-size: 2rem;
-    }
-
-    .error-description {
-        font-size: 1rem;
-    }
-}

@@ -20,61 +20,18 @@
     border-radius: 50px;
 }
 
-.eliminar {
-    background: linear-gradient(135deg, #8b0000, #ff4d4d);
-}
 
-.mensaje,
-.detalle {
-    background: linear-gradient(135deg, #0f734d, #34d399);
-}
-
-.registrar {
-    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-}
-.button,
-.inicio,
-.editar,
 .suspender {
    background-color: #ff6f61;
 }
 
-.listado,
+
 .bloquear {
     background: linear-gradient(135deg, #5b21b6, #8f63f5);
-}
-
-
-.inhabilitado {
-    background: linear-gradient(135deg, #2aa9a1, #6fd3cb);
-}
-
-.imprimir {
-    background: linear-gradient(135deg, #c58a00, #fbbf24);
 }
 
 .desactivar {
     background: linear-gradient(135deg, #0e7490, #38bdf8);
 }
 
-.limpiar,
-.actualizar {
-    background: linear-gradient(135deg, #0f766e, #14b8a6);
-}
 
-.modulo,
-.activar {
-    background: linear-gradient(135deg, #7a9b00, #bef453);
-}
-
-.pdf,
-.logout,
-.eliminar,
-.cancelar {
-    background: linear-gradient(135deg, #8a341e, #f6513b);
-}
-
-.excel,
-.confirmar {
-    background: linear-gradient(135deg, #1aa36a, #41d48d);
-}
