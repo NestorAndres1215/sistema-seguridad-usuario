@@ -90,7 +90,7 @@ public class UserService {
             user.setPhotoUrl(photoUrl);
             return userRepository.save(user);
         }).orElseGet(() -> {
-            try {
+
                 User newUser = new User();
                 newUser.setEmail(email);
                 newUser.setName(name);
@@ -105,11 +105,7 @@ public class UserService {
                 UserStatus defaultStatus = statusRepository.findByCode(StatusConstants.ACTIVE)
                         .orElseThrow(() -> new ResourceNotFoundException("Default status not found"));
                 newUser.setStatus(defaultStatus);
-
                 return userRepository.save(newUser);
-            } catch (Exception e) {
-                throw new BadRequestException(e.getMessage());
-            }
         });
     }
 
@@ -172,10 +168,6 @@ public class UserService {
     }
 
     public User actualUsuario(Principal principal) {
-        if (principal == null || principal.getName() == null) {
-            throw new RuntimeException(AuthConstants.USUARIO_NO_AUTORIZADO);
-        }
-
         User user = userRepository.findByUsername(principal.getName())
                 .orElseGet(() -> userRepository.findByEmail(principal.getName())
                         .orElseThrow(() -> new UsernameNotFoundException(AuthConstants.USUARIO_NO_VALIDO + principal.getName())));
