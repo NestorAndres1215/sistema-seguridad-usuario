@@ -68,6 +68,7 @@ public class UserService {
                 .name(request.getName())
                 .username(request.getUsername())
                 .email(request.getEmail())
+                .provider("LOCAL")
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(defaultRole)
                 .status(defaultStatus)
