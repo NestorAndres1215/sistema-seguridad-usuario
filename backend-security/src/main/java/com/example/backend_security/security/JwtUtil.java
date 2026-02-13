@@ -30,14 +30,10 @@ public class JwtUtil {
     @Value("${jwt.expirationMs:${JWT_EXPIRATION}}")
     private long jwtExpiration;
 
-    // 🔐 Método para obtener la clave segura
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
     }
 
-    // ===============================
-    // 🔹 2️⃣ Generar token JWT
-    // ===============================
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
 
@@ -58,14 +54,11 @@ public class JwtUtil {
                 .setSubject(subject)
                 .setIssuedAt(issuedAt)
                 .setExpiration(expiration)
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256) // <── Aquí se usa
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
 
-    // ===============================
-    // 🔹 3️⃣ Extraer datos del token
-    // ===============================
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -81,15 +74,12 @@ public class JwtUtil {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey()) // 👈 También aquí
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
 
-    // ===============================
-    // 🔹 4️⃣ Validar token
-    // ===============================
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
@@ -98,7 +88,5 @@ public class JwtUtil {
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
-
-
 
 }

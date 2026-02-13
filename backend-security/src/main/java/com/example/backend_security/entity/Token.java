@@ -1,11 +1,19 @@
 package com.example.backend_security.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tokens")
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Token {
 
     @Id
@@ -28,76 +36,4 @@ public class Token {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
-    public Token() {
-    }
-
-    public Token(Long id, User user, String token, LocalDateTime expirationDate, String valid, LocalDateTime creationDate) {
-        this.id = id;
-        this.user = user;
-        this.token = token;
-        this.expirationDate = expirationDate;
-        this.valid = valid;
-        this.creationDate = creationDate;
-    }
-
-    @Override
-    public String toString() {
-        return "Token{" +
-                "id=" + id +
-                ", user=" + user +
-                ", token='" + token + '\'' +
-                ", expirationDate=" + expirationDate +
-                ", valid='" + valid + '\'' +
-                ", creationDate=" + creationDate +
-                '}';
-    }
-
-    // Getters y Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public LocalDateTime getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(LocalDateTime expirationDate) {
-        this.expirationDate = expirationDate;
-    }
-
-    public String getValid() {
-        return valid;
-    }
-
-    public void setValid(String valid) {
-        this.valid = valid;
-    }
-
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
 }

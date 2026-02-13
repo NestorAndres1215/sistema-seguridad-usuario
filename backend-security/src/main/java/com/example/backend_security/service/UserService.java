@@ -19,6 +19,7 @@ import com.example.backend_security.repository.RoleRepository;
 import com.example.backend_security.repository.UserRepository;
 import com.example.backend_security.repository.UserStatusRepository;
 import com.example.backend_security.security.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -35,6 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
@@ -45,49 +47,33 @@ public class UserService {
     private final JwtUtil jwtUtils;
     private final TokenService tokenService;
 
-    @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, UserStatusRepository statusRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtil jwtUtils, TokenService tokenService) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.statusRepository = statusRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.jwtUtils = jwtUtils;
-        this.tokenService = tokenService;
 
-    }
-
-    // =========================
-    // Crear un usuario
-    // =========================
     public User createUser(RegisterRequest request) {
-        // Validar si el username ya existe
+
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new ResourceAlreadyExistsException("Username already exists: " + request.getUsername());
         }
 
-        // Validar si el email ya existe
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new ResourceAlreadyExistsException("Email already exists: " + request.getEmail());
         }
 
-        // Obtener rol por defecto
         Role defaultRole = roleRepository.findByName(RolesConstants.USER)
                 .orElseThrow(() -> new ResourceNotFoundException("Default role not found"));
 
-        // Obtener estado por defecto
         UserStatus defaultStatus = statusRepository.findByCode(StatusConstants.ACTIVE)
                 .orElseThrow(() -> new ResourceNotFoundException("Default status not found"));
 
-        // Crear el usuario
-        User newUser = new User();
-        newUser.setName(request.getName());
-        newUser.setUsername(request.getUsername());
-        newUser.setEmail(request.getEmail());
-        newUser.setPassword(passwordEncoder.encode(request.getPassword()));
-        newUser.setRole(defaultRole);
-        newUser.setStatus(defaultStatus);
-        newUser.setCreationDate(LocalDateTime.now());
+        User newUser = User.builder()
+                .name(request.getName())
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(defaultRole)
+                .status(defaultStatus)
+                .creationDate(LocalDateTime.now())
+                .build();
+
 
         return userRepository.save(newUser);
     }
@@ -133,38 +119,22 @@ public class UserService {
         });
     }
 
-
-    // =========================
-    // Buscar usuario por ID
-    // =========================
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
 
-    // =========================
-    // Buscar usuario por username
-    // =========================
     public Optional<User> getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
-    // =========================
-    // Buscar usuario por email
-    // =========================
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    // =========================
-    // Listar todos los usuarios
-    // =========================
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // =========================
-    // Actualizar usuario
-    // =========================
     public User updateUser(Long userId, RegisterRequest updatedUser) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User with ID " + userId + " not found"));
@@ -189,25 +159,23 @@ public class UserService {
     }
 
 
-    // =========================
-    // 🔹 LOGIN (Generar token)
-    // =========================
+
     public TokenResponse login(LoginRequest loginRequest) {
         String identificador = loginRequest.getLogin();
         String password = loginRequest.getPassword();
 
         try {
-            // Autenticación con Spring Security
+
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(identificador, password)
             );
 
-            // Buscar usuario por username o email
+
             User user = userRepository.findByUsername(identificador)
                     .orElseGet(() -> userRepository.findByEmail(identificador)
                             .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado: " + identificador)));
 
-            // 🔹 Generar token
+
             String token = jwtUtils.generateToken(user);
             tokenService.createToken(user.getId(), token);
 
@@ -221,9 +189,6 @@ public class UserService {
             throw new BadRequestException(AuthConstants.ERROR_LOGIN);
         }
     }
-    // =========================
-    // 🔹 USUARIO ACTUAL
-    // =========================
 
     public User actualUsuario(Principal principal) {
         if (principal == null || principal.getName() == null) {
@@ -236,9 +201,7 @@ public class UserService {
         return user;
     }
 
-    // =========================
-    // 🔹 USUARIO ACTUAL POR ESTADO
-    // =========================
+
 
     public List<User> getActiveUsers() {
         return userRepository.findByStatus_Code(StatusConstants.ACTIVE);
@@ -256,9 +219,6 @@ public class UserService {
         return userRepository.findByStatus_Code(StatusConstants.BLOCKED);
     }
 
-    // =========================
-    // 🔹 USUARIO LISTAR POR ROLES
-    // =========================
     public List<User> getUsersByRoleUser() {
         return userRepository.findByRole_Name(RolesConstants.USER);
     }
@@ -268,7 +228,6 @@ public class UserService {
         return userRepository.findByRole_Name(RolesConstants.ADMIN);
     }
 
-    // ------------------ ROLE_USER ------------------
     public List<User> getActiveUsersByRoleUser() {
         return userRepository.findByRole_NameAndStatus_Code(RolesConstants.USER, StatusConstants.ACTIVE);
     }
@@ -285,7 +244,6 @@ public class UserService {
         return userRepository.findByRole_NameAndStatus_Code(RolesConstants.USER, StatusConstants.BLOCKED);
     }
 
-    // ------------------ ROLE_ADMIN ------------------
     public List<User> getActiveUsersByRoleAdmin() {
         return userRepository.findByRole_NameAndStatus_Code(RolesConstants.ADMIN, StatusConstants.ACTIVE);
     }
@@ -302,9 +260,7 @@ public class UserService {
         return userRepository.findByRole_NameAndStatus_Code(RolesConstants.ADMIN, StatusConstants.BLOCKED);
     }
 
-    // =========================
-    // 🔹 Desactivar
-    // =========================
+
     public User InactiveUser(Long codigo) {
         User user = userRepository.findById(codigo)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con código: " + codigo));
@@ -317,9 +273,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // =========================
-    // 🔹 Activar
-    // =========================
     public User ActiveUser(Long codigo) {
         User user = userRepository.findById(codigo)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con código: " + codigo));

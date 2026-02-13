@@ -1,9 +1,6 @@
 package com.example.backend_security.constants;
 
 public class AuthConstants {
-    public AuthConstants() {
-    }
-
     public static final String TOKEN_INVALIDO = "TOKEN INVÁLIDO O EXPIRADO";
     public static final String TOKEN_NO_VALIDO_PARA_USUARIO = "TOKEN NO VÁLIDO PARA EL USUARIO";
     public static final String USUARIO_NO_VALIDO = "USUARIO NO ENCONTRADO";

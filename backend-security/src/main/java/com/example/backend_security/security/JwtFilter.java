@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,15 +17,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
 
-    public JwtFilter(JwtUtil jwtUtil, CustomUserDetailsService userDetailsService) {
-        this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
-    }
+
 
     @Override
     protected void doFilterInternal(
@@ -35,7 +34,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String path = request.getServletPath();
 
-        // 🔹 Ignorar endpoints públicos y Swagger
         if (path.startsWith("/security/api/v1/v3/api-docs")
                 || path.startsWith("/swagger-ui")
 
@@ -49,7 +47,6 @@ public class JwtFilter extends OncePerRequestFilter {
         String jwtToken = null;
         String usernameOrEmail = null;
 
-        // 🔹 1️⃣ Verificar encabezado Authorization
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
             try {
@@ -59,11 +56,10 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
-        // 🔹 2️⃣ Validar que no haya autenticación previa
         if (usernameOrEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(usernameOrEmail);
-                // 🔹 3️⃣ Validar token JWT
+
                 if (this.jwtUtil.validateToken(jwtToken, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(
@@ -81,7 +77,6 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
-        // 🔹 4️⃣ Continuar la cadena de filtros
         filterChain.doFilter(request, response);
     }
 }

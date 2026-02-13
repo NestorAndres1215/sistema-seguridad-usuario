@@ -21,7 +21,6 @@ public class PermissionService {
         this.permissionRepository = permissionRepository;
     }
 
-    // Crear Permission
     public Permission createPermission(Permission permission)  {
         if (permissionRepository.findByCode(permission.getCode()).isPresent()) {
             throw new ResourceAlreadyExistsException("Permission already exists");
@@ -29,17 +28,17 @@ public class PermissionService {
         return permissionRepository.save(permission);
     }
 
-    // Obtener todos los Permissions
+
     public List<Permission> getAllPermissions() {
         return permissionRepository.findAll();
     }
 
-    // Obtener Permission por ID
+
     public Optional<Permission> getPermissionById(Long id) {
         return permissionRepository.findById(id);
     }
 
-    // Actualizar Permission
+
     public Permission updatePermission(Long id, Permission updatedPermission)  {
         Permission permission = permissionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Permission not found"));
@@ -50,7 +49,7 @@ public class PermissionService {
         return permissionRepository.save(permission);
     }
 
-    // Eliminar Permission
+
     public void deletePermission(Long id)  {
         Permission permission = permissionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Permission not found"));

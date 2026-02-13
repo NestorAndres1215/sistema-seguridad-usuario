@@ -3,6 +3,7 @@ package com.example.backend_security.controller;
 import com.example.backend_security.entity.Session;
 import com.example.backend_security.service.SessionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,27 +17,17 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/sessions")
+@RequiredArgsConstructor
 @Tag(name = "Sessions")
 public class SessionController {
 
     private final SessionService sessionService;
 
-    public SessionController(SessionService sessionService) {
-        this.sessionService = sessionService;
-    }
-
-    // =========================
-    // Listar todas las sesiones
-    // =========================
     @GetMapping
     public ResponseEntity<List<Session>> getAllSessions() {
-        List<Session> sessions = sessionService.getAllSessions();
-        return ResponseEntity.ok(sessions);
+        return ResponseEntity.ok(sessionService.getAllSessions());
     }
 
-    // =========================
-    // Obtener sesión por ID
-    // =========================
     @GetMapping("/{id}")
     public ResponseEntity<Session> getSessionById(@PathVariable Long id) {
         Optional<Session> sessionOpt = sessionService.getSessionById(id);
@@ -45,13 +36,10 @@ public class SessionController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // =========================
-    // Listar todas las sesiones de un usuario
-    // =========================
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Session>> getSessionsByUser(@PathVariable Long userId) {
-        List<Session> sessions = sessionService.getSessionsByUser(userId);
-        return ResponseEntity.ok(sessions);
+        return ResponseEntity.ok(sessionService.getSessionsByUser(userId));
     }
 }
 

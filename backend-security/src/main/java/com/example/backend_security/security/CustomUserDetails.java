@@ -1,20 +1,20 @@
 package com.example.backend_security.security;
 
 import com.example.backend_security.entity.User;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
-
+@ToString
+@RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
     private final User user;
 
-    public CustomUserDetails(User user) {
-        this.user = user;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -72,12 +72,5 @@ public class CustomUserDetails implements UserDetails {
         return user;
     }
 
-    @Override
-    public String toString() {
-        return "CustomUserDetails{" +
-                "username='" + getUsername() + '\'' +
-                ", role=" + (user.getRole() != null ? user.getRole().getName() : "sin rol") +
-                ", status=" + (user.getStatus() != null ? user.getStatus().getCode() : "N/A") +
-                '}';
-    }
+
 }

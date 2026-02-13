@@ -2,6 +2,11 @@ package com.example.backend_security.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -10,6 +15,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -52,86 +61,11 @@ public class User {
     private LocalDateTime creationDate;
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnore  // Ignorar la relación para evitar ciclo
+    @JsonIgnore
     private Set<Token> tokens = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnore  // Ignorar la relación para evitar ciclo
+    @JsonIgnore
     private Set<Session> sessions = new HashSet<>();
 
-    public User() {}
-
-    public User(Long id, String name, String username, String email, String password, String provider, String photoUrl, byte[] profilePhoto, LocalDateTime lastLogin, LocalDateTime creationDate) {
-        this.id = id;
-        this.name = name;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.provider = provider;
-        this.photoUrl = photoUrl;
-        this.profilePhoto = profilePhoto;
-        this.lastLogin = lastLogin;
-        this.creationDate = creationDate;
-    }
-
-    // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-
-    public String getProvider() { return provider; }
-    public void setProvider(String provider) { this.provider = provider; }
-
-    public String getPhotoUrl() { return photoUrl; }
-    public void setPhotoUrl(String photoUrl) { this.photoUrl = photoUrl; }
-
-    public byte[] getProfilePhoto() { return profilePhoto; }
-    public void setProfilePhoto(byte[] profilePhoto) { this.profilePhoto = profilePhoto; }
-
-    public UserStatus getStatus() { return status; }
-    public void setStatus(UserStatus status) { this.status = status; }
-
-    public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
-
-    public LocalDateTime getLastLogin() { return lastLogin; }
-    public void setLastLogin(LocalDateTime lastLogin) { this.lastLogin = lastLogin; }
-
-    public LocalDateTime getCreationDate() { return creationDate; }
-    public void setCreationDate(LocalDateTime creationDate) { this.creationDate = creationDate; }
-
-    public Set<Token> getTokens() { return tokens; }
-    public void setTokens(Set<Token> tokens) { this.tokens = tokens; }
-
-    public Set<Session> getSessions() { return sessions; }
-    public void setSessions(Set<Session> sessions) { this.sessions = sessions; }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", provider='" + provider + '\'' +
-                ", photoUrl='" + photoUrl + '\'' +
-
-                ", status=" + status +
-                ", role=" + role +
-                ", lastLogin=" + lastLogin +
-                ", creationDate=" + creationDate +
-                '}';
-    }
 }

@@ -7,6 +7,7 @@ import com.example.backend_security.service.GoogleService;
 import com.example.backend_security.service.TokenService;
 import com.example.backend_security.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/google")
+@RequiredArgsConstructor
 @Tag(name = "Authentication with GoogAutle")
 public class GoogleController {
 
@@ -26,12 +28,6 @@ public class GoogleController {
     private final JwtUtil jwtUtil;
     private final TokenService tokenService;
 
-    public GoogleController(GoogleService googleService, UserService userService, JwtUtil jwtUtil, TokenService tokenService) {
-        this.googleService = googleService;
-        this.userService = userService;
-        this.jwtUtil = jwtUtil;
-        this.tokenService = tokenService;
-    }
 
     @PostMapping("/loginWithGoogle")
     public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> body) {
@@ -61,7 +57,6 @@ public class GoogleController {
                     "picture", user.getPhotoUrl()
             ));
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
