@@ -15,4 +15,9 @@ export class StatusService {
     return this.http.get<any[]>(`${this.backendUrl}/statuses/list`);
   }
 
+  getStatusById(id: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.backendUrl}/statuses/${id}`);
+  }
+
+
 }

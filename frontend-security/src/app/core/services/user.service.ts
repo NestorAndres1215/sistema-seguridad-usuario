@@ -19,16 +19,12 @@ export class UserService {
   }
 
   createUser(request: Registrar): Observable<any> {
-    return this.http.post(`${this.backendUrl}/users`, request, {
-      responseType: 'text'
-    });
+    return this.http.post(`${this.backendUrl}/users`, request, { responseType: 'text' });
   }
-
 
   getUserById(id: number): Observable<any> {
     return this.http.get<any>(`${this.backendUrl}/users/${id}`);
   }
-
 
   getUserByUsername(username: string): Observable<any> {
     return this.http.get<any>(`${this.backendUrl}/users/username/${username}`);
@@ -37,7 +33,6 @@ export class UserService {
   getUserByEmail(email: string): Observable<any> {
     return this.http.get<any>(`${this.backendUrl}/users/email/${email}`);
   }
-
 
   updateUser(userId: number, updatedUser: Registrar): Observable<any> {
     return this.http.put<any>(`${this.backendUrl}/users/${userId}`, updatedUser);
