@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { UserService } from '../../../core/services/user.service';
-import { Titulo } from "../../../shared/titulo/titulo";
+import { Titulo } from '../../../shared/titulo/titulo';
+import { firstValueFrom } from 'rxjs';
 
 Chart.register(...registerables);
 
@@ -9,58 +10,63 @@ Chart.register(...registerables);
   selector: 'app-dashboard-admin',
   templateUrl: './dashboard-admin.html',
   styleUrls: ['./dashboard-admin.css'],
-  imports: [Titulo]
+  imports: [Titulo],
 })
 export class DashboardAdmin implements OnInit {
-
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {}
 
   activo = 0;
   inactivo = 0;
   suspendido = 0;
   bloqueado = 0;
-  ngOnInit(): void {
-    this.allPorcentaje();
-    this.loadRoleChart(); 
+
+  async ngOnInit(): Promise<void> {
+    await this.allPorcentaje();
+    this.loadRoleChart();
   }
 
+  async allPorcentaje(): Promise<void> {
+    try {
+      const data = await firstValueFrom(
+        this.userService.getUserStatusPercentages(),
+      );
 
-  allPorcentaje() {
-    this.userService.getUserStatusPercentages().subscribe({
-      next: (data) => {
-        console.log('Porcentajes:', data);
+      const labels = data.map((item: any) =>
+        this.formatStatusLabel(item.statusCode),
+      );
 
-        // ✅ Mapeamos correctamente los nombres del backend
-        const labels = data.map((item: any) => this.formatStatusLabel(item.statusCode));
-        const valores = data.map((item: any) => item.porcentaje);
-        const cantidad = data.map((item: any) => item.totalUsuarios);
-        console.log("HOLA" + cantidad)
-        data.forEach((item) => {
-          switch (item.statusCode) {
-            case 'ACTIVE':
-              this.activo = item.totalUsuarios;
-              break;
-            case 'INACTIVE':
-              this.inactivo = item.totalUsuarios;
+      const valores = data.map((item: any) => item.porcentaje);
 
-              break;
-            case 'SUSPEND':
-              this.suspendido = item.totalUsuarios;
+      const cantidad = data.map((item: any) => item.totalUsuarios);
 
-              break;
-            case 'BLOCKED':
-              this.bloqueado = item.totalUsuarios;
+      data.forEach((item) => {
+        switch (item.statusCode) {
+          case 'ACTIVE':
+            this.activo = item.totalUsuarios;
 
-              break;
-          }
-        });
+            break;
 
-        this.renderStatusChart(labels, valores);
-      },
-      error: (err) => {
-        console.error('Error al obtener porcentajes', err);
-      }
-    });
+          case 'INACTIVE':
+            this.inactivo = item.totalUsuarios;
+
+            break;
+
+          case 'SUSPEND':
+            this.suspendido = item.totalUsuarios;
+
+            break;
+
+          case 'BLOCKED':
+            this.bloqueado = item.totalUsuarios;
+
+            break;
+        }
+      });
+
+      this.renderStatusChart(labels, valores);
+    } catch (error) {
+      console.error('Error al obtener porcentajes', error);
+    }
   }
 
   renderStatusChart(labels: string[], valores: number[]) {
@@ -68,10 +74,12 @@ export class DashboardAdmin implements OnInit {
       type: 'doughnut',
       data: {
         labels,
-        datasets: [{
-          data: valores,
-          backgroundColor: ['#198754', '#6c757d', '#ffc107', '#dc3545']
-        }]
+        datasets: [
+          {
+            data: valores,
+            backgroundColor: ['#198754', '#6c757d', '#ffc107', '#dc3545'],
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -82,21 +90,26 @@ export class DashboardAdmin implements OnInit {
             callbacks: {
               label: function (context: any) {
                 return `${context.label}: ${context.parsed}%`;
-              }
-            }
-          }
-        }
-      }
+              },
+            },
+          },
+        },
+      },
     });
   }
 
   formatStatusLabel(code: string): string {
     switch (code) {
-      case 'ACTIVE': return 'Activo';
-      case 'INACTIVE': return 'Inactivo';
-      case 'SUSPEND': return 'Suspendido';
-      case 'BLOCKED': return 'Bloqueado';
-      default: return code;
+      case 'ACTIVE':
+        return 'Activo';
+      case 'INACTIVE':
+        return 'Inactivo';
+      case 'SUSPEND':
+        return 'Suspendido';
+      case 'BLOCKED':
+        return 'Bloqueado';
+      default:
+        return code;
     }
   }
 
@@ -105,17 +118,19 @@ export class DashboardAdmin implements OnInit {
       type: 'bar',
       data: {
         labels: ['Admin', 'Editor', 'Usuario', 'Invitado'],
-        datasets: [{
-          label: 'Cantidad',
-          data: [5, 10, 30, 120, 45],
-          backgroundColor: ['#0d6efd', '#20c997', '#6f42c1', '#ffc107']
-        }]
+        datasets: [
+          {
+            label: 'Cantidad',
+            data: [5, 10, 30, 120, 45],
+            backgroundColor: ['#0d6efd', '#20c997', '#6f42c1', '#ffc107'],
+          },
+        ],
       },
       options: {
         responsive: true,
         plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true } }
-      }
+        scales: { y: { beginAtZero: true } },
+      },
     });
   }
 }

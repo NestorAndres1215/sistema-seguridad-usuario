@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { GoogleService } from '../../../core/services/google.service';
 import { AlertService } from '../../../core/services/alert.service';
 
@@ -7,52 +8,50 @@ import { AlertService } from '../../../core/services/alert.service';
   selector: 'app-auth-callback',
   imports: [],
   templateUrl: './auth-callback.html',
-  styleUrl: './auth-callback.css'
+  styleUrl: './auth-callback.css',
 })
 export class AuthCallback {
   constructor(
     private route: ActivatedRoute,
     private alertService: AlertService,
     private authService: GoogleService,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
-
-  ngOnInit() {
-    this.callBack();
-
+  async ngOnInit(): Promise<void> {
+    await this.callBack();
   }
 
-  callBack() {
+  async callBack(): Promise<void> {
     const code = this.route.snapshot.queryParamMap.get('code');
 
     if (!code) {
-      this.alertService.error('Error de autenticación', 'No se recibió el código de Google.');
-
+      this.alertService.error(
+        'Error de autenticación',
+        'No se recibió el código de Google.',
+      );
       return;
     }
 
-    this.authService.loginWithCode(code).subscribe({
-      next: (res) => {
+    try {
+      const res = await firstValueFrom(this.authService.loginWithCode(code));
 
-        localStorage.setItem('jwt', res.token);
-        this.authService.getCurrentUser().subscribe({
-          next: (user) => {
-            console.log('👤 Usuario actual:', user.username);
-            localStorage.setItem('username', user.email)
-            this.router.navigate(['/dashboard']);
-          },
-          error: () => {
+      localStorage.setItem('jwt', res.token);
 
-            this.router.navigate(['/login']);
-          },
-        });
-      },
-      error: () => {
-        this.alertService.error('Error', 'No se pudo completar la autenticación con Google');
-        this.router.navigate(['/login']);
-      },
-    });
+      const user = await firstValueFrom(this.authService.getCurrentUser());
 
+      console.log('👤 Usuario actual:', user.username);
+
+      localStorage.setItem('username', user.email);
+
+      await this.router.navigate(['/dashboard']);
+    } catch (error) {
+      this.alertService.error(
+        'Error',
+        'No se pudo completar la autenticación con Google',
+      );
+
+      await this.router.navigate(['/login']);
+    }
   }
 }

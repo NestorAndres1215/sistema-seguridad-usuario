@@ -1,23 +1,23 @@
 import { Component } from '@angular/core';
 import { RoleService } from '../../../core/services/role.service';
 import { FormsModule } from '@angular/forms';
-import { PaginationComponent } from "../../../shared/pagination/pagination";
-import { Tabla } from "../../../shared/tabla/tabla";
+import { PaginationComponent } from '../../../shared/pagination/pagination';
+import { Tabla } from '../../../shared/tabla/tabla';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-user-roles',
   imports: [FormsModule, PaginationComponent, Tabla],
   templateUrl: './user-roles.html',
-  styleUrl: './user-roles.css'
+  styleUrl: './user-roles.css',
 })
 export class UserRoles {
-   role: any[] = [];
+  role: any[] = [];
   currentPage = 1;
   itemsPerPage = 10;
   columnas = [
     { clave: 'id', etiqueta: 'Id' },
     { clave: 'name', etiqueta: 'Nombre' },
-
   ];
   constructor(private roleService: RoleService) {}
 
@@ -28,15 +28,20 @@ export class UserRoles {
     this.loadUsers();
   }
 
-  loadUsers(): void {
-    this.roleService.getAllRole().subscribe({
-      next: (data) => (this.role = data),
-      error: () => (this.role = []),
-    });
+  async loadUsers(): Promise<void> {
+    try {
+      this.role = await firstValueFrom(this.roleService.getAllRole());
+    } catch (error) {
+      console.error('Error al cargar roles:', error);
+
+      this.role = [];
+    }
   }
 
   get totalPages(): number {
-    return this.role.length ? Math.ceil(this.role.length / this.itemsPerPage) : 1;
+    return this.role.length
+      ? Math.ceil(this.role.length / this.itemsPerPage)
+      : 1;
   }
 
   paginatedUsers(): any[] {

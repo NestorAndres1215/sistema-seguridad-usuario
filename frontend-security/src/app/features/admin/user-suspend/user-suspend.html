@@ -1,6 +1,6 @@
 <div class="container mt-5">
   <app-tabla [columnas]="columnas" [datos]="users" [botonesConfig]="botonesConfig"
-    [onDesactivar]="descativar.bind(this)">
+    [onActivar]="activar.bind(this)">
   </app-tabla>
 
   <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChanged)="onPageChanged($event)">

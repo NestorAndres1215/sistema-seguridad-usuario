@@ -15,7 +15,5 @@ import { Titulo } from "../../../shared/titulo/titulo";
   styleUrl: './user-admin.css'
 })
 export class UserAdmin {
-  constructor() { }
-
   activeTab: number = 0;
 }

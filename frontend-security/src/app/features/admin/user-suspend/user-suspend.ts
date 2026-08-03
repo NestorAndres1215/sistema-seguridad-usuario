@@ -5,23 +5,27 @@ import { UserService } from '../../../core/services/user.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from '../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
-import { PaginationComponent } from "../../../shared/pagination/pagination";
-import { Tabla } from "../../../shared/tabla/tabla";
+import { PaginationComponent } from '../../../shared/pagination/pagination';
+import { Tabla } from '../../../shared/tabla/tabla';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-user-suspend',
   imports: [FormsModule, MatDialogModule, PaginationComponent, Tabla],
   templateUrl: './user-suspend.html',
-  styleUrl: './user-suspend.css'
+  styleUrl: './user-suspend.css',
 })
 export class UserSuspend {
   users: any[] = [];
   currentPage = 1;
   itemsPerPage = 10;
-  constructor(private userService: UserService, private dialog: MatDialog, private authService: AuthService) { }
+  constructor(
+    private userService: UserService,
+    private dialog: MatDialog,
+    private authService: AuthService,
+  ) {}
 
   ngOnInit(): void {
-
     const savedItems = localStorage.getItem('itemsPerPage');
     if (savedItems) {
       this.itemsPerPage = parseInt(savedItems, 10);
@@ -33,46 +37,56 @@ export class UserSuspend {
     { clave: 'id', etiqueta: 'Codigo' },
     { clave: 'email', etiqueta: 'Correo' },
     { clave: 'name', etiqueta: 'Nombre' },
-
   ];
 
   botonesConfig = {
     bloquear: true,
     suspender: true,
-    desactivar: true
+    desactivar: true,
   };
-  descativar(row: any) {
-    console.log(row)
+  
+  async activar(row: any): Promise<void> {
+
     const dialogEliminar = this.dialog.open(ModalEliminacion, {
       disableClose: true,
       width: '500px',
       data: {
         row,
         titulo: 'Restaurar',
-        subtitulo: `¿Deseas restaurar el usuario ${row.username} con el codigo ${row.id} ? `
-      },
-
-    });
-
-    dialogEliminar.afterClosed().subscribe((respuesta: Respuesta) => {
-      if (respuesta?.boton != 'CONFIRMAR') return;
-      this.userService.activarUsuario(row.id).subscribe(result => {
-        this.loadUsers();
-      });
-    })
-  }
-
-  loadUsers(): void {
-    this.userService.getUsersSuspend().subscribe({
-      next: (data) => (this.users = data),
-      error: (err) => {
-        this.users = [];
+        subtitulo: `¿Deseas restaurar el usuario ${row.username} con el código ${row.id}?`,
       },
     });
+
+    const respuesta: Respuesta = await firstValueFrom(
+      dialogEliminar.afterClosed(),
+    );
+
+    if (respuesta?.boton !== 'CONFIRMAR') {
+      return;
+    }
+
+    try {
+      await firstValueFrom(this.userService.activarUsuario(row.id));
+
+      await this.loadUsers();
+    } catch (error) {
+      console.error('Error al activar usuario:', error);
+    }
   }
 
+  async loadUsers(): Promise<void> {
+    try {
+      this.users = await firstValueFrom(this.userService.getUsersSuspend());
+    } catch (error) {
+      console.error('Error cargando usuarios suspendidos:', error);
+
+      this.users = [];
+    }
+  }
   get totalPages(): number {
-    return this.users.length ? Math.ceil(this.users.length / this.itemsPerPage) : 1;
+    return this.users.length
+      ? Math.ceil(this.users.length / this.itemsPerPage)
+      : 1;
   }
 
   paginatedUsers(): any[] {

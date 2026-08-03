@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -7,24 +8,25 @@ import { AuthService } from '../../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './user.html',
-  styleUrls: ['./user.css']
+  styleUrls: ['./user.css'],
 })
 export class User implements OnInit {
   isLoggedIn = false;
   user: any = null;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
-  ngOnInit() {
-    this.listUser();
+  async ngOnInit(): Promise<void> {
+    await this.listUser();
   }
 
-  listUser() {
-    this.authService.getCurrentUser().subscribe({
-      next: (user) => {
-        this.user = user;
-        this.isLoggedIn = true;
-      },
-    });
+  async listUser(): Promise<void> {
+    try {
+      this.user = await firstValueFrom(this.authService.getCurrentUser());
+      this.isLoggedIn = true;
+    } catch (error) {
+      this.user = null;
+      this.isLoggedIn = false;
+    }
   }
 }

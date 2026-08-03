@@ -5,17 +5,17 @@ import { UserService } from '../../../core/services/user.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from '../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
-import { PaginationComponent } from "../../../shared/pagination/pagination";
-import { Tabla } from "../../../shared/tabla/tabla";
+import { PaginationComponent } from '../../../shared/pagination/pagination';
+import { Tabla } from '../../../shared/tabla/tabla';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-user-blocked',
   imports: [FormsModule, MatDialogModule, PaginationComponent, Tabla],
   templateUrl: './user-blocked.html',
-  styleUrl: './user-blocked.css'
+  styleUrl: './user-blocked.css',
 })
 export class UserBlocked {
-
   users: any[] = [];
   currentPage = 1;
   itemsPerPage = 10;
@@ -24,19 +24,21 @@ export class UserBlocked {
     { clave: 'id', etiqueta: 'Codigo' },
     { clave: 'email', etiqueta: 'Correo' },
     { clave: 'name', etiqueta: 'Nombre' },
-
   ];
 
   botonesConfig = {
     bloquear: true,
     suspender: true,
-    desactivar: true
+    desactivar: true,
   };
 
-  constructor(private userService: UserService, private dialog: MatDialog, private authService: AuthService) { }
+  constructor(
+    private userService: UserService,
+    private dialog: MatDialog,
+    private authService: AuthService,
+  ) {}
 
   ngOnInit(): void {
-
     const savedItems = localStorage.getItem('itemsPerPage');
     if (savedItems) {
       this.itemsPerPage = parseInt(savedItems, 10);
@@ -45,38 +47,54 @@ export class UserBlocked {
     this.loadUsers();
   }
 
-  descativar(row: any) {
-    console.log(row)
+  async activar(row: any): Promise<void> {
+    console.log(row);
+
     const dialogEliminar = this.dialog.open(ModalEliminacion, {
       disableClose: true,
+
       width: '500px',
+
       data: {
         row,
+
         titulo: 'Restaurar',
-        subtitulo: `¿Deseas restaurar el usuario ${row.username} con el codigo ${row.id} ? `
-      },
 
+        subtitulo: `¿Deseas restaurar el usuario ${row.username} con el código ${row.id}?`,
+      },
     });
 
-    dialogEliminar.afterClosed().subscribe((respuesta: Respuesta) => {
-      if (respuesta?.boton != 'CONFIRMAR') return;
-      this.userService.activarUsuario(row.id).subscribe(result => {
-        this.loadUsers();
-      });
-    })
+    const respuesta: Respuesta = await firstValueFrom(
+      dialogEliminar.afterClosed(),
+    );
+
+    if (respuesta?.boton !== 'CONFIRMAR') {
+      return;
+    }
+
+    try {
+      await firstValueFrom(this.userService.activarUsuario(row.id));
+
+      await this.loadUsers();
+    } catch (error) {
+      console.error('Error al activar usuario:', error);
+    }
   }
-  loadUsers(): void {
-    this.userService.getUsersBlocked().subscribe({
-      next: (data) => (this.users = data),
-      error: (err) => {
-        console.error('Error cargando usuarios:', err);
-        this.users = [];
-      },
-    });
+
+  async loadUsers(): Promise<void> {
+    try {
+      this.users = await firstValueFrom(this.userService.getUsersBlocked());
+    } catch (error) {
+      console.error('Error cargando usuarios:', error);
+
+      this.users = [];
+    }
   }
 
   get totalPages(): number {
-    return this.users.length ? Math.ceil(this.users.length / this.itemsPerPage) : 1;
+    return this.users.length
+      ? Math.ceil(this.users.length / this.itemsPerPage)
+      : 1;
   }
 
   paginatedUsers(): any[] {
@@ -93,4 +111,3 @@ export class UserBlocked {
     this.currentPage = newPage;
   }
 }
-

@@ -7,6 +7,7 @@ import { UserService } from '../../../core/services/user.service';
 import { FormsModule } from '@angular/forms';
 import { PaginationComponent } from "../../../shared/pagination/pagination";
 import { Tabla } from "../../../shared/tabla/tabla";
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-user-inactive',
@@ -42,35 +43,85 @@ export class UserInactive {
     this.loadUsers();
   }
 
-  descativar(row: any) {
-    console.log(row)
-    const dialogEliminar = this.dialog.open(ModalEliminacion, {
-      disableClose: true,
-      width: '500px',
-      data: {
-        row,
-        titulo: 'Restaurar',
-        subtitulo: `¿Deseas restaurar el usuario ${row.username} con el codigo ${row.id} ? `
-      },
 
-    });
+async activar(row: any): Promise<void> {
 
-    dialogEliminar.afterClosed().subscribe((respuesta: Respuesta) => {
-      if (respuesta?.boton != 'CONFIRMAR') return;
-      this.userService.activarUsuario(row.id).subscribe(result => {
-        this.loadUsers();
-      });
-    })
+  console.log(row);
+
+
+  const dialogEliminar = this.dialog.open(ModalEliminacion, {
+
+    disableClose: true,
+
+    width: '500px',
+
+    data: {
+
+      row,
+
+      titulo: 'Restaurar',
+
+      subtitulo: `¿Deseas restaurar el usuario ${row.username} con el código ${row.id}?`
+
+    }
+
+  });
+
+
+  const respuesta: Respuesta = await firstValueFrom(
+    dialogEliminar.afterClosed()
+  );
+
+
+  if (respuesta?.boton !== 'CONFIRMAR') {
+    return;
   }
 
-  loadUsers(): void {
-    this.userService.getUsersInactive().subscribe({
-      next: (data) => (this.users = data),
-      error: () => {
-        this.users = [];
-      },
-    });
+
+  try {
+
+    await firstValueFrom(
+      this.userService.activarUsuario(row.id)
+    );
+
+
+    await this.loadUsers();
+
+
+  } catch (error) {
+
+    console.error(
+      'Error al activar usuario:',
+      error
+    );
+
   }
+
+}
+
+
+
+async loadUsers(): Promise<void> {
+
+  try {
+
+    this.users = await firstValueFrom(
+      this.userService.getUsersInactive()
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      'Error cargando usuarios:',
+      error
+    );
+
+    this.users = [];
+
+  }
+
+}
   
   get totalPages(): number {
     return this.users.length ? Math.ceil(this.users.length / this.itemsPerPage) : 1;

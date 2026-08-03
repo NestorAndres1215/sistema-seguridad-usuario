@@ -1,25 +1,31 @@
 <div class="container my-4" style="max-width: 95%;">
   <app-titulo [titulo]="'MANTENIMIENTO DE USUARIO'"></app-titulo>
+
   <mat-tab-group [(selectedIndex)]="activeTab">
+
     <mat-tab label="Usuario Activo">
-      <ng-container *ngIf="activeTab === 0">
+      @if (activeTab === 0) {
         <app-user-active></app-user-active>
-      </ng-container>
+      }
     </mat-tab>
+
     <mat-tab label="Usuario Inactivo">
-      <ng-container *ngIf="activeTab === 1">
+      @if (activeTab === 1) {
         <app-user-inactive></app-user-inactive>
-      </ng-container>
+      }
     </mat-tab>
+
     <mat-tab label="Usuario Suspendido">
-      <ng-container *ngIf="activeTab === 2">
+      @if (activeTab === 2) {
         <app-user-suspend></app-user-suspend>
-      </ng-container>
+      }
     </mat-tab>
+
     <mat-tab label="Usuario Bloqueado">
-      <ng-container *ngIf="activeTab === 3">
+      @if (activeTab === 3) {
         <app-user-blocked></app-user-blocked>
-      </ng-container>
+      }
     </mat-tab>
+
   </mat-tab-group>
 </div>

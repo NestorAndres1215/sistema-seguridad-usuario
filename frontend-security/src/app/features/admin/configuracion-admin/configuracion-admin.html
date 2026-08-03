@@ -3,15 +3,15 @@
 
   <mat-tab-group [(selectedIndex)]="activeTab">
     <mat-tab label="Roles">
-      <ng-container *ngIf="activeTab === 0">
+      @if (activeTab === 0) {
         <app-user-roles></app-user-roles>
-      </ng-container>
+      }
     </mat-tab>
 
     <mat-tab label="Estado">
-      <ng-container *ngIf="activeTab === 1">
+      @if (activeTab === 1) {
         <app-user-status></app-user-status>
-      </ng-container>
+      }
     </mat-tab>
   </mat-tab-group>
 </div>

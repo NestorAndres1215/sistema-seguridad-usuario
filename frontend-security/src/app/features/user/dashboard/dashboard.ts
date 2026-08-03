@@ -1,27 +1,26 @@
 import { Component } from '@angular/core';
-import { GoogleService } from '../../../core/services/google.service';
+import { firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
-import { SidebarUser } from "../../../shared/sidebar-user/sidebar-user";
+import { GoogleService } from '../../../core/services/google.service';
 
 @Component({
   selector: 'app-dashboard',
   imports: [],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css'
+  styleUrl: './dashboard.css',
 })
 export class Dashboard {
   constructor(
     private router: Router,
     private authService: GoogleService,
+  ) {}
 
-  ) { }
-
-  logout() {
-    this.authService.logout().subscribe({
-      next: () => {
-        this.router.navigate(['/login']);
-      },
-    });
+  async logout(): Promise<void> {
+    try {
+      await firstValueFrom(this.authService.logout());
+      await this.router.navigate(['/login']);
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
   }
-
 }

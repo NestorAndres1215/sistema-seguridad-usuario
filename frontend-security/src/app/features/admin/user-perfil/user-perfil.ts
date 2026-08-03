@@ -1,35 +1,33 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
+
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-user-perfil',
- imports: [CommonModule], // ✅ Importa CommonModule aquí
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './user-perfil.html',
-  styleUrl: './user-perfil.css'
+  styleUrl: './user-perfil.css',
 })
 export class UserPerfil {
- isLoggedIn = false;
+  isLoggedIn = false;
   user: any = null;
 
   constructor(private authService: AuthService) {}
 
-  ngOnInit() {
-    console.log('hola');
-    this.listUser();
+  async ngOnInit(): Promise<void> {
+    await this.listUser();
   }
 
-  listUser() {
-    this.authService.getCurrentUser().subscribe({
-      next: (user) => {
-        console.log('Usuario actual:', user);
-        this.user = user;
-        this.isLoggedIn = true;
-      },
-      error: (err) => {
-        console.error('Error al obtener el usuario actual:', err);
-        this.isLoggedIn = false;
-      }
-    });
+  async listUser(): Promise<void> {
+    try {
+      this.user = await firstValueFrom(this.authService.getCurrentUser());
+      this.isLoggedIn = true;
+    } catch (error) {
+      this.user = null;
+      this.isLoggedIn = false;
+    }
   }
 }

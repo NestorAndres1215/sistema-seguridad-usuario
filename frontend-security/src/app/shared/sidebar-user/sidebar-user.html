@@ -16,10 +16,10 @@
                     <span class="texto">Usuario</span>
                 </a>
             </li>
-        
+
         </ul>
         <ul class="side-menu top">
-           
+
             <li>
                 <a class="logout" (click)="logout()">
                     <i class="fas fa-sign-out-alt"></i>
@@ -31,7 +31,7 @@
     <section id="content">
         <nav>
             <i (click)="addToggle()" class="fas fa-bars"></i>
-         <span class="user-info">{{ username || 'Invitado' }}</span>
+            <span class="user-info">{{ username || 'Invitado' }}</span>
         </nav>
         <main>
             <router-outlet></router-outlet>

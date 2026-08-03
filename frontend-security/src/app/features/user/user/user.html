@@ -1,23 +1,57 @@
 <section class="user-section">
+  @if (!user && !isLoggedIn) {
+    <div class="empty">
+      <p>
+        <i class="fa-solid fa-exclamation-triangle"></i>
+        No hay usuario cargado.
+      </p>
+    </div>
+  }
 
-  <div *ngIf="!user && !isLoggedIn" class="empty">
-    <p><i class="fa-solid fa-exclamation-triangle"></i> No hay usuario cargado.</p>
-  </div>
-  <div *ngIf="user" class="user-card">
-    <div class="photo-wrapper">
-      <img *ngIf="user.photoUrl; else noPhoto" [src]="user.photoUrl" alt="Foto de usuario" class="user-photo" />
-      <ng-template #noPhoto>
-        <div class="user-photo-placeholder">
-          <i class="fa-solid fa-user"></i> Sin foto
-        </div>
-      </ng-template>
+  @if (user) {
+    <div class="user-card">
+      <div class="photo-wrapper">
+        @if (user.photoUrl) {
+          <img [src]="user.photoUrl" alt="Foto de usuario" class="user-photo" />
+        } @else {
+          <div class="user-photo-placeholder">
+            <i class="fa-solid fa-user"></i>
+            Sin foto
+          </div>
+        }
+      </div>
+
+      <div class="user-info">
+        <p>
+          <i class="fa-solid fa-id-card"></i>
+          <strong>Nombre:</strong>
+          {{ user.name || user.fullName || "—" }}
+        </p>
+
+        <p>
+          <i class="fa-solid fa-user"></i>
+          <strong>Usuario:</strong>
+          {{ user.username || user.login || "—" }}
+        </p>
+
+        <p>
+          <i class="fa-solid fa-envelope"></i>
+          <strong>Email:</strong>
+          {{ user.email || "—" }}
+        </p>
+
+        <p>
+          <i class="fa-solid fa-user-shield"></i>
+          <strong>Rol:</strong>
+          {{ user.role?.name || "Sin rol" }}
+        </p>
+
+        <p>
+          <i class="fa-solid fa-circle-check"></i>
+          <strong>Estado:</strong>
+          {{ user.status?.code }}
+        </p>
+      </div>
     </div>
-    <div class="user-info">
-      <p><i class="fa-solid fa-id-card"></i> <strong>Nombre:</strong> {{ user.name || user.fullName || '—' }}</p>
-      <p><i class="fa-solid fa-user"></i> <strong>Usuario:</strong> {{ user.username || user.login || '—' }}</p>
-      <p><i class="fa-solid fa-envelope"></i> <strong>Email:</strong> {{ user.email || '—' }}</p>
-      <p><i class="fa-solid fa-user-shield"></i> <strong>Rol:</strong> {{ user.role?.name || 'Sin rol' }}</p>
-      <p><i class="fa-solid fa-circle-check"></i> <strong>Estado:</strong> {{ user.status?.code }}</p>
-    </div>
-  </div>
+  }
 </section>

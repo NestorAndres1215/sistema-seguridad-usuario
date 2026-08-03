@@ -1,17 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environments';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, of, tap } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
-  private backendUrl = environment.backendUrl;
-
-  constructor(private http: HttpClient) { }
-
+  private readonly backendUrl = environment.backendUrl;
+  private readonly http = inject(HttpClient);
 
   generateToken(loginData: any) {
     return this.http.post(`${this.backendUrl}/auth/generate-token`, loginData);
@@ -19,13 +16,14 @@ export class AuthService {
 
   getCurrentUser() {
     const token = localStorage.getItem('jwt');
-    console.log(token)
+
     if (token) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-      console.log(headers)
-      return this.http.get(`${this.backendUrl}/auth/actual-usuario`, { headers });
-    } else {
 
+      return this.http.get(`${this.backendUrl}/auth/actual-usuario`, {
+        headers,
+      });
+    } else {
       return this.http.get(`${this.backendUrl}/auth/actual-usuario`);
     }
   }
@@ -46,18 +44,22 @@ export class AuthService {
     }
 
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
 
-    return this.http.post(`${this.backendUrl}/auth/logout`, {}, { headers, responseType: 'text' as 'json' }).pipe(
-      tap(response => {
-
-        localStorage.removeItem('jwt');
-      }),
-      catchError(error => {
-        return of(error);
-      })
-    );
+    return this.http
+      .post(
+        `${this.backendUrl}/auth/logout`,
+        {},
+        { headers, responseType: 'text' as 'json' },
+      )
+      .pipe(
+        tap((response) => {
+          localStorage.removeItem('jwt');
+        }),
+        catchError((error) => {
+          return of(error);
+        }),
+      );
   }
-
 }

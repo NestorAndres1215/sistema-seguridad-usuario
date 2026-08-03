@@ -13,10 +13,5 @@ import { Titulo } from "../../../shared/titulo/titulo";
   styleUrl: './configuracion-admin.css'
 })
 export class ConfiguracionAdmin {
-  constructor() { }
-
-  ngOnInit(): void {
-    
-  }
   activeTab: number = 0;
 }
