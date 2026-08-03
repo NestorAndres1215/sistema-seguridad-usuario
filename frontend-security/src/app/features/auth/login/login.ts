@@ -11,6 +11,7 @@ import { AlertService } from '../../../core/services/alert.service';
 import { Login_IS } from '../../../models/loginIS';
 import { ROLES } from '../../../core/constants/role.contants';
 import { MENSAJES } from '../../../core/constants/messages';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -20,57 +21,44 @@ import { MENSAJES } from '../../../core/constants/messages';
 })
 export class Login {
   formulario!: FormGroup;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private authService: GoogleService,
-    private googleService: GoogleService,
     private alertService: AlertService,
   ) {}
 
-  login() {
-    this.googleService.login();
+  login(): void {
+    this.authService.login();
   }
 
-  operar() {
+  async operar(): Promise<void> {
     if (!this.formulario.valid) {
       this.alertService.warning(MENSAJES.WARNING, MENSAJES.FILL_FIELDS);
-
       this.formulario.markAllAsTouched();
       return;
     }
 
-    if (this.formulario.valid) {
-      const login: Login_IS = {
-        login: this.formulario.get('login')?.value,
-        password: this.formulario.get('password')?.value,
-      };
+    const login: Login_IS = {
+      login: this.formulario.get('login')?.value,
+      password: this.formulario.get('password')?.value,
+    };
 
-      this.authService.generateToken(login).subscribe({
-        next: (data: any) => {
-          this.authService.setToken(data.token);
-          this.authService.getCurrentUser().subscribe({
-            next: (user) => {
-              const rol = user.role.name;
+    try {
+      await firstValueFrom(this.authService.generateToken(login));
+      const user = await firstValueFrom(this.authService.getCurrentUser());
+      const rol = user?.role?.name;
 
-              if (rol == ROLES.ROLE_ADMIN) {
-                localStorage.setItem('username', user.username);
-
-                this.router.navigate(['/dashboard-admin']);
-              } else {
-                localStorage.setItem('username', user.username);
-                this.router.navigate(['/dashboard']);
-              }
-            },
-          });
-        },
-        error: () => {
-          this.alertService.error('Error', MENSAJES.LOGIN_ERROR);
-        },
-      });
-    } else {
-      this.alertService.warning(MENSAJES.WARNING, MENSAJES.FILL_FIELDS);
-      this.formulario.markAllAsTouched();
+      if (rol === ROLES.ROLE_ADMIN) {
+        await this.router.navigate(['/dashboard-admin']);
+      } else if (rol === ROLES.ROLE_USER) {
+        await this.router.navigate(['/dashboard']);
+      } else {
+        this.alertService.error('Error', 'Rol no válido');
+      }
+    } catch (error) {
+      this.alertService.error('Error', MENSAJES.LOGIN_ERROR);
     }
   }
 
@@ -78,14 +66,14 @@ export class Login {
     this.initForm();
   }
 
-  initForm() {
+  initForm(): void {
     this.formulario = this.fb.group({
       login: ['', Validators.required],
       password: ['', Validators.required],
     });
   }
 
-  register() {
+  register(): void {
     this.router.navigate(['/register']);
   }
 }

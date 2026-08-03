@@ -2,16 +2,15 @@ import { Injectable } from '@angular/core';
 import Swal from 'sweetalert2';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlertService {
-
   success(title: string, text?: string) {
     Swal.fire({
       icon: 'success',
       title,
       text,
-      confirmButtonColor: '#3085d6'
+      confirmButtonColor: '#3085d6',
     });
   }
 
@@ -20,7 +19,7 @@ export class AlertService {
       icon: 'error',
       title,
       text,
-      confirmButtonColor: '#d33'
+      confirmButtonColor: '#d33',
     });
   }
 
@@ -29,7 +28,7 @@ export class AlertService {
       icon: 'warning',
       title,
       text,
-      confirmButtonColor: '#f0ad4e'
+      confirmButtonColor: '#f0ad4e',
     });
   }
 
@@ -38,7 +37,7 @@ export class AlertService {
       icon: 'info',
       title,
       text,
-      confirmButtonColor: '#17a2b8'
+      confirmButtonColor: '#17a2b8',
     });
   }
 
@@ -51,7 +50,7 @@ export class AlertService {
       confirmButtonText: 'Sí',
       cancelButtonText: 'No',
       confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33'
-    }).then(result => result.isConfirmed);
+      cancelButtonColor: '#d33',
+    }).then((result) => result.isConfirmed);
   }
 }

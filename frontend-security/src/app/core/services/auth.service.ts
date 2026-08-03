@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environments';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of, tap } from 'rxjs';
 
 @Injectable({
@@ -10,54 +10,48 @@ export class AuthService {
   private readonly backendUrl = environment.backendUrl;
   private readonly http = inject(HttpClient);
 
-  generateToken(loginData: any) {
-    return this.http.post(`${this.backendUrl}/auth/generate-token`, loginData);
-  }
-
-  getCurrentUser() {
-    const token = localStorage.getItem('jwt');
-
-    if (token) {
-      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-      return this.http.get(`${this.backendUrl}/auth/actual-usuario`, {
-        headers,
-      });
-    } else {
-      return this.http.get(`${this.backendUrl}/auth/actual-usuario`);
-    }
-  }
-
-  get token(): string | null {
-    return localStorage.getItem('jwt');
-  }
-
-  setToken(token: string) {
-    localStorage.setItem('jwt', token);
-  }
-
-  logout(): Observable<any> {
-    const token = localStorage.getItem('jwt');
-
-    if (!token) {
-      return of({ message: 'No token to logout' });
-    }
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+  /**
+   * Login usuario/password
+   * Backend crea cookie JWT
+   */
+  generateToken(loginData: any): Observable<any> {
+    return this.http.post(`${this.backendUrl}/auth/generate-token`, loginData, {
+      withCredentials: true,
     });
+  }
 
+  /**
+   * Obtener usuario actual
+   * Backend lee cookie JWT
+   */
+  getCurrentUser(): Observable<any> {
+    return this.http.get(`${this.backendUrl}/auth/actual-usuario`, {
+      withCredentials: true,
+    });
+  }
+
+  /**
+   * Logout
+   * Backend invalida token y elimina cookie
+   */
+  logout(): Observable<any> {
     return this.http
       .post(
         `${this.backendUrl}/auth/logout`,
         {},
-        { headers, responseType: 'text' as 'json' },
+        {
+          withCredentials: true,
+          responseType: 'text' as 'json',
+        },
       )
       .pipe(
-        tap((response) => {
-          localStorage.removeItem('jwt');
+        tap(() => {
+          console.log('Sesión cerrada correctamente');
         }),
+
         catchError((error) => {
+          console.error('Error cerrando sesión:', error);
+
           return of(error);
         }),
       );

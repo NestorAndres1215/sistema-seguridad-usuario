@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+
 import { GoogleService } from '../../../core/services/google.service';
 import { AlertService } from '../../../core/services/alert.service';
 
@@ -30,22 +31,23 @@ export class AuthCallback {
         'Error de autenticación',
         'No se recibió el código de Google.',
       );
+
       return;
     }
 
     try {
-      const res = await firstValueFrom(this.authService.loginWithCode(code));
+      // Backend crea la cookie JWT automáticamente
+      await firstValueFrom(this.authService.loginWithCode(code));
 
-      localStorage.setItem('jwt', res.token);
-
+      // Validamos usuario usando la cookie
       const user = await firstValueFrom(this.authService.getCurrentUser());
 
       console.log('👤 Usuario actual:', user.username);
 
-      localStorage.setItem('username', user.email);
-
       await this.router.navigate(['/dashboard']);
     } catch (error) {
+      console.error('Error Google Login:', error);
+
       this.alertService.error(
         'Error',
         'No se pudo completar la autenticación con Google',
