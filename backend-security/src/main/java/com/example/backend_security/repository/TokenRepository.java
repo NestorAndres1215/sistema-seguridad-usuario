@@ -4,6 +4,7 @@ import com.example.backend_security.entity.Token;
 import com.example.backend_security.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,4 +16,5 @@ public interface TokenRepository extends JpaRepository<Token,Long> {
 
     List<Token> findByValid(String valid);
 
+    void deleteByExpirationDateBefore(LocalDateTime date);
 }

@@ -19,23 +19,30 @@ public class RoleService {
     private final RoleRepository roleRepository;
 
     public Role createRole(Role role) {
-        if (roleRepository.findByName(role.getName()).isPresent()) {
-            throw new ResourceAlreadyExistsException("Role already exists");
-        }
+
+        roleRepository.findByName(role.getName())
+                .ifPresent(r -> {
+                    throw new ResourceAlreadyExistsException("Role already exists");});
+
         return roleRepository.save(role);
     }
+
 
     public List<Role> getAllRoles() {
         return roleRepository.findAll();
     }
 
-    public Optional<Role> getRoleById(Long id) {
-        return roleRepository.findById(id);
+
+    public Role getRoleById(Long id) {
+
+        return roleRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Role not found"));
     }
 
+
     public void deleteRole(Long id) {
-        Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+        Role role = getRoleById(id);
         roleRepository.delete(role);
     }
 }

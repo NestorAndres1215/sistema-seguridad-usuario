@@ -15,13 +15,10 @@ public class CustomUserDetails implements UserDetails {
 
     private final User user;
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (user.getRole() != null) {
-            return Collections.singletonList(
-                    new SimpleGrantedAuthority(user.getRole().getName())
-            );
+            return Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getName()));
         }
         return Collections.emptyList();
     }
@@ -30,7 +27,6 @@ public class CustomUserDetails implements UserDetails {
     public String getPassword() {
         return user.getPassword();
     }
-
 
     @Override
     public String getUsername() {

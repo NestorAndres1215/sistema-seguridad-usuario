@@ -43,7 +43,7 @@ public class GoogleController {
 
         String jwt = jwtUtil.generateToken(user);
 
-        tokenService.createToken(user.getId(), jwt);
+        tokenService.create(user.getId(), jwt);
 
         System.out.println(jwt);
         return ResponseEntity.ok(Map.of(

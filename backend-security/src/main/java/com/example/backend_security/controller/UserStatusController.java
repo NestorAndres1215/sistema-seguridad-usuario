@@ -5,13 +5,10 @@ import com.example.backend_security.service.UserStatusService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/statuses")
@@ -21,18 +18,14 @@ public class UserStatusController {
 
     private final UserStatusService statusService;
 
-
     @GetMapping("/list")
     public ResponseEntity<List<UserStatus>> getAllStatuses() {
-        List<UserStatus> statuses = statusService.getAllStatuses();
-        return ResponseEntity.ok(statuses);
+        return ResponseEntity.ok(statusService.getAllStatuses());
     }
 
     @GetMapping("/list/{id}")
     public ResponseEntity<UserStatus> getStatusById(@PathVariable Long id) {
-        Optional<UserStatus> statusOpt = statusService.getStatusById(id);
-        return statusOpt
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(statusService.getStatusById(id));
     }
+
 }

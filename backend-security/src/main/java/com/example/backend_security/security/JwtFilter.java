@@ -4,6 +4,7 @@ import com.example.backend_security.constants.AuthConstants;
 import com.example.backend_security.exception.JwtAuthenticationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,51 +25,61 @@ public class JwtFilter extends OncePerRequestFilter {
     private final CustomUserDetailsService userDetailsService;
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String path = request.getServletPath();
 
-        if (path.startsWith("/security/api/v1/v3/api-docs")
-                || path.startsWith("/swagger-ui")
+        if (path.startsWith("/security/api/v1/v3/api-docs") || path.startsWith("/swagger-ui") || path.equals("/users")) {
 
-                || path.equals("/users")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-
-        String requestTokenHeader = request.getHeader("Authorization");
-        String jwtToken = null;
+        String jwtToken = getTokenFromCookie(request);
         String usernameOrEmail = null;
 
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-            jwtToken = requestTokenHeader.substring(7);
-            usernameOrEmail = this.jwtUtil.extractUsername(jwtToken);
+        if (jwtToken != null) {
+            usernameOrEmail = jwtUtil.extractUsername(jwtToken);
         }
 
         if (usernameOrEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(usernameOrEmail);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(usernameOrEmail);
 
-            if (this.jwtUtil.validateToken(jwtToken, userDetails)) {
+            if (jwtUtil.validateToken(jwtToken, userDetails)) {
+
                 UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities()
-                        );
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            } else {
-                throw new JwtAuthenticationException(AuthConstants.TOKEN_NO_VALIDO_PARA_USUARIO);
-            }
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+
+            } else {
+
+                throw new JwtAuthenticationException(AuthConstants.TOKEN_NO_VALIDO_PARA_USUARIO);
+
+            }
         }
 
         filterChain.doFilter(request, response);
+
     }
+
+
+
+    private String getTokenFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies == null) {
+            return null;
+        }
+
+        for (Cookie cookie : cookies) {
+            if ("jwt".equals(cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+        return null;
+    }
+
 }

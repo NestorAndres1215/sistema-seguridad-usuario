@@ -22,7 +22,7 @@ public class TokenService {
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
 
-    public Token createToken(Long userId, String jwt) {
+    public Token create(Long userId, String jwt) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 

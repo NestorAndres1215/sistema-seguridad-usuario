@@ -5,22 +5,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TokenResponse {
+public class ApiResponse {
+
+    private LocalDateTime timestamp;
+
+    private int status;
+
+    private String error;
 
     private String message;
-
-    private String token;
-
-    private String user;
-
-    private String email;
-
-    private String role;
-
-    private String expiration;
 
 }

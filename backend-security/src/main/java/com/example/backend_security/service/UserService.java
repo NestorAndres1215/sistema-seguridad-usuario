@@ -4,21 +4,20 @@ import com.example.backend_security.constants.AuthConstants;
 
 import com.example.backend_security.constants.RolesConstants;
 import com.example.backend_security.constants.StatusConstants;
-import com.example.backend_security.dto.LoginRequest;
-import com.example.backend_security.dto.RegisterRequest;
-import com.example.backend_security.dto.TokenResponse;
-import com.example.backend_security.dto.UserStatusPercentageDTO;
+import com.example.backend_security.dto.*;
 import com.example.backend_security.entity.Role;
 import com.example.backend_security.entity.User;
 import com.example.backend_security.entity.UserStatus;
-import com.example.backend_security.exception.BadRequestException;
-import com.example.backend_security.exception.JwtAuthenticationException;
 import com.example.backend_security.exception.ResourceAlreadyExistsException;
 import com.example.backend_security.exception.ResourceNotFoundException;
+import com.example.backend_security.mapper.UserMapper;
 import com.example.backend_security.repository.RoleRepository;
 import com.example.backend_security.repository.UserRepository;
 import com.example.backend_security.repository.UserStatusRepository;
 import com.example.backend_security.security.JwtUtil;
+import com.example.backend_security.util.JwtCookieUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,7 +45,8 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtils;
     private final TokenService tokenService;
-
+    private final JwtCookieUtil jwtCookieUtil;
+    private final UserMapper userMapper;
 
     public User createUser(RegisterRequest request) {
 
@@ -58,7 +58,7 @@ public class UserService {
             throw new ResourceAlreadyExistsException("Email already exists: " + request.getEmail());
         }
 
-        Role defaultRole = roleRepository.findByName(RolesConstants.USER)
+        Role defaultRole = roleRepository.findByName(RolesConstants.ADMIN)
                 .orElseThrow(() -> new ResourceNotFoundException("Default role not found"));
 
         UserStatus defaultStatus = statusRepository.findByCode(StatusConstants.ACTIVE)
@@ -109,20 +109,37 @@ public class UserService {
         });
     }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public UserResponse getUserById(Long id) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Usuario no encontrado"));
+
+        return userMapper.toResponse(user);
     }
 
-    public Optional<User> getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public UserResponse getUserByUsername(String username) {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Usuario no encontrado"));
+        return userMapper.toResponse(user);
     }
 
-    public Optional<User> getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public UserResponse getUserByEmail(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Usuario no encontrado"));
+        return userMapper.toResponse(user);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponse> getAllUsers() {
+
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
     }
 
     public User updateUser(Long userId, RegisterRequest updatedUser) {
@@ -148,132 +165,185 @@ public class UserService {
     }
 
 
-    public TokenResponse login(LoginRequest loginRequest) {
+    public TokenResponse login(LoginRequest loginRequest, HttpServletResponse response) {
+
         String identificador = loginRequest.getLogin();
         String password = loginRequest.getPassword();
-
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(identificador, password)
-        );
+                new UsernamePasswordAuthenticationToken(identificador, password));
 
         User user = userRepository.findByUsername(identificador)
                 .orElseGet(() -> userRepository.findByEmail(identificador)
-                        .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado: " + identificador)));
-
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException("Usuario no encontrado")));
 
         String token = jwtUtils.generateToken(user);
-        tokenService.createToken(user.getId(), token);
+        tokenService.create(user.getId(), token);
 
-        return new TokenResponse(token);
+
+        jwtCookieUtil.saveToken(response, token);
+
+        return TokenResponse.builder()
+                .message("Login correcto")
+                .token(token)
+                .user(user.getUsername())
+                .email(user.getEmail())
+                .role(user.getRole().getName())
+                .expiration("7 días")
+                .build();
     }
 
     public User actualUsuario(Principal principal) {
-        User user = userRepository.findByUsername(principal.getName())
+        return userRepository.findByUsername(principal.getName())
                 .orElseGet(() -> userRepository.findByEmail(principal.getName())
                         .orElseThrow(() -> new UsernameNotFoundException(AuthConstants.USUARIO_NO_VALIDO + principal.getName())));
-        return user;
     }
 
 
-    public List<User> getActiveUsers() {
-        return userRepository.findByStatus_Code(StatusConstants.ACTIVE);
-    }
+    public List<UserResponse> getActiveUsers() {
 
-    public List<User> getInactiveUsers() {
-        return userRepository.findByStatus_Code(StatusConstants.INACTIVE);
-    }
-
-    public List<User> getSuspendUsers() {
-        return userRepository.findByStatus_Code(StatusConstants.SUSPEND);
-    }
-
-    public List<User> getBlockedUsers() {
-        return userRepository.findByStatus_Code(StatusConstants.BLOCKED);
-    }
-
-    public List<User> getUsersByRoleUser() {
-        return userRepository.findByRole_Name(RolesConstants.USER);
-    }
-
-    public List<User> getUsersByRoleAdmin() {
-        return userRepository.findByRole_Name(RolesConstants.ADMIN);
-    }
-
-    public List<User> getActiveUsersByRoleUser() {
-        return userRepository.findByRole_NameAndStatus_Code(RolesConstants.USER, StatusConstants.ACTIVE);
-    }
-
-    public List<User> getSuspendedUsersByRoleUser() {
-        return userRepository.findByRole_NameAndStatus_Code(RolesConstants.USER, StatusConstants.SUSPEND);
-    }
-
-    public List<User> getInactiveUsersByRoleUser() {
-        return userRepository.findByRole_NameAndStatus_Code(RolesConstants.USER, StatusConstants.INACTIVE);
-    }
-
-    public List<User> getBlockedUsersByRoleUser() {
-        return userRepository.findByRole_NameAndStatus_Code(RolesConstants.USER, StatusConstants.BLOCKED);
-    }
-
-    public List<User> getActiveUsersByRoleAdmin() {
-        return userRepository.findByRole_NameAndStatus_Code(RolesConstants.ADMIN, StatusConstants.ACTIVE);
-    }
-
-    public List<User> getSuspendedUsersByRoleAdmin() {
-        return userRepository.findByRole_NameAndStatus_Code(RolesConstants.ADMIN, StatusConstants.SUSPEND);
-    }
-
-    public List<User> getInactiveUsersByRoleAdmin() {
-        return userRepository.findByRole_NameAndStatus_Code(RolesConstants.ADMIN, StatusConstants.INACTIVE);
-    }
-
-    public List<User> getBlockedUsersByRoleAdmin() {
-        return userRepository.findByRole_NameAndStatus_Code(RolesConstants.ADMIN, StatusConstants.BLOCKED);
+        return userRepository.findByStatus_Code(StatusConstants.ACTIVE)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
     }
 
 
-    public User InactiveUser(Long codigo) {
-        User user = userRepository.findById(codigo)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con código: " + codigo));
+    public List<UserResponse> getInactiveUsers() {
 
-        UserStatus inactiveStatus = statusRepository.findByCode(StatusConstants.INACTIVE)
-                .orElseThrow(() -> new ResourceNotFoundException("Estado INACTIVE no encontrado"));
-
-        user.setStatus(inactiveStatus);
-        return userRepository.save(user);
-    }
-
-    public User ActiveUser(Long codigo) {
-        User user = userRepository.findById(codigo)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con código: " + codigo));
-
-        UserStatus inactiveStatus = statusRepository.findByCode(StatusConstants.ACTIVE)
-                .orElseThrow(() -> new ResourceNotFoundException("Estado ACTIVE no encontrado"));
-
-        user.setStatus(inactiveStatus);
-        return userRepository.save(user);
-    }
-
-    public User BlockedUser(Long codigo) {
-        User user = userRepository.findById(codigo)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con código: " + codigo));
-
-        UserStatus inactiveStatus = statusRepository.findByCode(StatusConstants.BLOCKED)
-                .orElseThrow(() -> new ResourceNotFoundException("Estado BLOCKED no encontrado"));
-
-        user.setStatus(inactiveStatus);
-        return userRepository.save(user);
+        return userRepository.findByStatus_Code(StatusConstants.INACTIVE)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
     }
 
 
-    public User SuspendUser(Long código) {
-        User user = userRepository.findById(código)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con código: " + código));
+    public List<UserResponse> getSuspendUsers() {
 
-        UserStatus inactiveStatus = statusRepository.findByCode(StatusConstants.SUSPEND)
-                .orElseThrow(() -> new ResourceNotFoundException("Estado SUSPEND no encontrado"));
+        return userRepository.findByStatus_Code(StatusConstants.SUSPEND)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
 
-        user.setStatus(inactiveStatus);
+
+    public List<UserResponse> getBlockedUsers() {
+
+        return userRepository.findByStatus_Code(StatusConstants.BLOCKED)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
+
+    public List<UserResponse> getUsersByRoleUser() {
+
+        return userRepository.findByRole_Name(RolesConstants.USER)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
+
+
+    public List<UserResponse> getUsersByRoleAdmin() {
+
+        return userRepository.findByRole_Name(RolesConstants.ADMIN)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
+
+    public List<UserResponse> getActiveUsersByRoleUser() {
+
+        return userRepository.findByRole_NameAndStatus_Code(RolesConstants.USER, StatusConstants.ACTIVE)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
+
+    public List<UserResponse> getSuspendedUsersByRoleUser() {
+
+        return userRepository.findByRole_NameAndStatus_Code(RolesConstants.USER, StatusConstants.SUSPEND)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
+
+    public List<UserResponse> getInactiveUsersByRoleUser() {
+
+        return userRepository.findByRole_NameAndStatus_Code(RolesConstants.USER, StatusConstants.INACTIVE)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
+
+    public List<UserResponse> getBlockedUsersByRoleUser() {
+
+        return userRepository.findByRole_NameAndStatus_Code(RolesConstants.USER, StatusConstants.BLOCKED)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
+
+    public List<UserResponse> getActiveUsersByRoleAdmin() {
+
+        return userRepository.findByRole_NameAndStatus_Code(RolesConstants.ADMIN, StatusConstants.ACTIVE)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
+
+    public List<UserResponse> getSuspendedUsersByRoleAdmin() {
+
+        return userRepository.findByRole_NameAndStatus_Code(RolesConstants.ADMIN, StatusConstants.SUSPEND)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
+
+    public List<UserResponse> getInactiveUsersByRoleAdmin() {
+
+        return userRepository.findByRole_NameAndStatus_Code(RolesConstants.ADMIN, StatusConstants.INACTIVE)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
+
+
+    public List<UserResponse> getBlockedUsersByRoleAdmin() {
+
+        return userRepository.findByRole_NameAndStatus_Code(RolesConstants.ADMIN, StatusConstants.BLOCKED)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
+
+    public UserResponse inactiveUser(Long id) {
+        return userMapper.toResponse(changeStatus(id, StatusConstants.INACTIVE));
+    }
+
+
+    public UserResponse activeUser(Long id) {
+        return userMapper.toResponse(changeStatus(id, StatusConstants.ACTIVE));
+    }
+
+    public UserResponse suspendUser(Long id) {
+        return userMapper.toResponse(changeStatus(id, StatusConstants.SUSPEND));
+    }
+
+    public UserResponse blockedUser(Long id) {
+        return userMapper.toResponse(changeStatus(id, StatusConstants.BLOCKED));
+    }
+
+    private User changeStatus(Long id, String statusCode) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Usuario no encontrado con código: " + id));
+
+        UserStatus status = statusRepository.findByCode(statusCode)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Estado no encontrado: " + statusCode));
+        user.setStatus(status);
         return userRepository.save(user);
     }
 

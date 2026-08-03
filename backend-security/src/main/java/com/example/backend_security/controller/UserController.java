@@ -1,6 +1,7 @@
 package com.example.backend_security.controller;
 
 import com.example.backend_security.dto.RegisterRequest;
+import com.example.backend_security.dto.UserResponse;
 import com.example.backend_security.dto.UserStatusPercentageDTO;
 import com.example.backend_security.entity.User;
 import com.example.backend_security.exception.ResourceNotFoundException;
@@ -21,40 +22,30 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
-    }
-
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(userService.createUser(request));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("User with ID " + id + " not found"));
+    @GetMapping
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
 
     @GetMapping("/username/{username}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-        return userService.getUserByUsername(username)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("User with username " + username + " not found"));
+    public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String username) {
+        return ResponseEntity.ok(userService.getUserByUsername(username));
     }
-
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        return userService.getUserByEmail(email)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("User with email " + email + " not found"));
+    public ResponseEntity<UserResponse> getUserByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(userService.getUserByEmail(email));
     }
-
 
     @PutMapping("/{userId}")
     public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody RegisterRequest updatedUser) {
@@ -62,93 +53,93 @@ public class UserController {
     }
 
     @GetMapping("/status-active")
-    public List<User> listActive() {
-        return userService.getActiveUsers();
+    public ResponseEntity<List<UserResponse>> listActive() {
+        return ResponseEntity.ok(userService.getActiveUsers());
     }
 
     @GetMapping("/status-inactive")
-    public List<User> listInactive() {
-        return userService.getInactiveUsers();
+    public ResponseEntity<List<UserResponse>> listInactive() {
+        return ResponseEntity.ok(userService.getInactiveUsers());
     }
 
     @GetMapping("/status-suspend")
-    public List<User> listSuspend() {
-        return userService.getSuspendUsers();
+    public ResponseEntity<List<UserResponse>> listSuspend() {
+        return ResponseEntity.ok(userService.getSuspendUsers());
     }
 
     @GetMapping("/status-blocked")
-    public List<User> listBlocked() {
-        return userService.getBlockedUsers();
+    public ResponseEntity<List<UserResponse>> listBlocked() {
+        return ResponseEntity.ok(userService.getBlockedUsers());
     }
 
     @GetMapping("/role-user")
-    public List<User> listUsersByRole() {
+    public List<UserResponse> listUsersByRole() {
         return userService.getUsersByRoleUser();
     }
 
     @GetMapping("/role-admin")
-    public List<User> listUsersByRoleAdmin() {
+    public List<UserResponse> listUsersByRoleAdmin() {
         return userService.getUsersByRoleAdmin();
     }
 
     @GetMapping("/role-user/active")
-    public List<User> listActiveUsersByRoleUser() {
+    public List<UserResponse> listActiveUsersByRoleUser() {
         return userService.getActiveUsersByRoleUser();
     }
 
     @GetMapping("/role-user/suspend")
-    public List<User> listSuspendedUsersByRoleUser() {
+    public List<UserResponse> listSuspendedUsersByRoleUser() {
         return userService.getSuspendedUsersByRoleUser();
     }
 
     @GetMapping("/role-user/inactive")
-    public List<User> listInactiveUsersByRoleUser() {
+    public List<UserResponse> listInactiveUsersByRoleUser() {
         return userService.getInactiveUsersByRoleUser();
     }
 
     @GetMapping("/role-user/blocked")
-    public List<User> listBlockedUsersByRoleUser() {
+    public List<UserResponse> listBlockedUsersByRoleUser() {
         return userService.getBlockedUsersByRoleUser();
     }
 
     @GetMapping("/role-admin/active")
-    public List<User> listActiveUsersByRoleAdmin() {
+    public List<UserResponse> listActiveUsersByRoleAdmin() {
         return userService.getActiveUsersByRoleAdmin();
     }
 
     @GetMapping("/role-admin/suspend")
-    public List<User> listSuspendedUsersByRoleAdmin() {
+    public List<UserResponse> listSuspendedUsersByRoleAdmin() {
         return userService.getSuspendedUsersByRoleAdmin();
     }
 
     @GetMapping("/role-admin/inactive")
-    public List<User> listInactiveUsersByRoleAdmin() {
+    public List<UserResponse> listInactiveUsersByRoleAdmin() {
         return userService.getInactiveUsersByRoleAdmin();
     }
 
     @GetMapping("/role-admin/blocked")
-    public List<User> listBlockedUsersByRoleAdmin() {
+    public List<UserResponse> listBlockedUsersByRoleAdmin() {
         return userService.getBlockedUsersByRoleAdmin();
     }
 
     @PutMapping("/inactive/{userId}")
-    public ResponseEntity<?> inactivarUsuario(@PathVariable Long userId) {
-        return ResponseEntity.ok(userService.InactiveUser(userId));
+    public ResponseEntity<UserResponse> inactiveUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.inactiveUser(userId));
     }
 
     @PutMapping("/active/{userId}")
-    public ResponseEntity<?> activarUsuario(@PathVariable Long userId) {
-        return ResponseEntity.ok(userService.ActiveUser(userId));
+    public ResponseEntity<UserResponse> activeUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.activeUser(userId));
     }
 
     @PutMapping("/suspend/{userId}")
-    public ResponseEntity<?> suspendedUsuario(@PathVariable Long userId) {
-        return ResponseEntity.ok(userService.SuspendUser(userId));
+    public ResponseEntity<UserResponse> suspendUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.suspendUser(userId));
     }
 
     @PutMapping("/blocked/{userId}")
-    public ResponseEntity<?> blockedUsuario(@PathVariable Long userId) {
-        return ResponseEntity.ok(userService.BlockedUser(userId));
+    public ResponseEntity<UserResponse> blockedUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.blockedUser(userId));
     }
 
     @GetMapping("/status-percentages")
