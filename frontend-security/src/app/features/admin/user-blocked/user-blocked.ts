@@ -26,16 +26,16 @@ export class UserBlocked {
     { clave: 'name', etiqueta: 'Nombre' },
   ];
 
-  botonesConfig = {
-    bloquear: true,
-    suspender: true,
-    desactivar: true,
-  };
+botonesConfig = {
+  bloquear: false,
+  suspender: false,
+  desactivar: false,
+  activar:true
+};
 
   constructor(
     private userService: UserService,
     private dialog: MatDialog,
-    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {

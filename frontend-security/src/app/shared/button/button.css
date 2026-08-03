@@ -20,9 +20,12 @@
     border-radius: 50px;
 }
 
+.activar {
+    background-color: #ff6f61;
+}
 
 .suspender {
-   background-color: #ff6f61;
+    background-color: #ff6f61;
 }
 
 
@@ -33,5 +36,3 @@
 .desactivar {
     background: linear-gradient(135deg, #0e7490, #38bdf8);
 }
-
-
